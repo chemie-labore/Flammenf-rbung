@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e9e6dc">
+<title>Flammenfärbung · Chemie 9 NTG</title>
+<style>
+:root{color-scheme:light;--ink:#242c2a;--muted:#626e65;--line:#d9d8cd;--paper:#f7f6ef;--accent:#e3ad60;--forest:#285649;--work:#232c2c;--view:#263231;font-family:Arial,Helvetica,sans-serif;background:#eae8df;color:var(--ink);font-synthesis:none}
+*,*:before,*:after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;width:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{background:radial-gradient(ellipse at 40% 0,#f4f1e8 0%,#eae8df 68%)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible,[data-target]:focus-visible{outline:3px solid #be7428;outline-offset:2px}
+button:disabled{cursor:default}
+h1,h2,p{margin:0}
+.shell{width:min(100%,1500px);height:100vh;height:100dvh;margin-inline:auto;display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.masthead{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:0 2px}
+.brand,.mast-actions{display:flex;align-items:center;gap:13px}
+.brand-icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:#293331;color:#f3bc73;box-shadow:0 3px 7px #242c2a22}
+.brand-icon svg{width:23px;height:23px}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;color:#5d695f}
+.eyebrow span{color:#a86a2e}
+h1{font:500 clamp(24px,3vw,37px)/1.02 Georgia,serif;letter-spacing:-.038em;margin-top:3px}
+.method{color:#405748;background:#e4ebdf;border:1px solid #cdd9cb;padding:7px 10px;border-radius:999px;white-space:nowrap;font-size:12px;font-weight:700}
+.reset{display:flex;align-items:center;justify-content:center;gap:6px;background:#f7f5ed;border:1px solid #d7d6c9;border-radius:9px;min-height:44px;padding:0 11px;font-size:13px;font-weight:700;white-space:nowrap}
+.reset svg{width:18px;height:18px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) clamp(170px,17vw,220px);gap:12px;min-height:0}
+.bench,.tray{min-height:0;min-width:0;border-radius:15px;overflow:hidden;box-shadow:0 3px 13px #33382b13}
+.bench{display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:var(--work);border:1px solid #293430;color:#f5f2e6}
+.bench-bar{min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px 7px 14px;background:#1e2827;border-bottom:1px solid #3c4a46}
+.bench-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+.bench-indicator{height:8px;width:8px;border-radius:50%;background:#81908a}
+.bench-indicator.on{background:#a1d0a5;box-shadow:0 0 7px #9fd7a166}
+.burner-controls{display:flex;gap:7px;align-items:center}
+.burner-controls button{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:43px;padding:0 9px;color:#f3f2ea;border:1px solid #4d5d56;background:#2a3835;border-radius:8px;white-space:nowrap;font-size:12px}
+.burner-controls b{padding:4px 7px;border-radius:5px;background:#414c49;color:#e2e5db;font-size:11px}
+.burner-controls button[aria-pressed=true] b{background:#dbead7;color:#245541}
+.view{position:relative;display:flex;align-items:center;justify-content:center;min-height:0;background:radial-gradient(ellipse at 55% 35%,#364742,#253230 65%,#22302e);isolation:isolate;overflow:hidden}
+#scene{display:block;width:100%;height:100%;touch-action:none;user-select:none;overflow:hidden}
+#scene [data-target]{cursor:pointer}
+#scene[data-holding=true]{cursor:grabbing}
+.selection,.heat{position:absolute;left:12px;top:10px;z-index:2;max-width:calc(100% - 24px);padding:7px 10px;border-radius:7px;background:#162521ed;border:1px solid #576c60;color:#f4f4eb;font-size:12px;font-weight:700;pointer-events:none}
+.selection{top:auto;bottom:9px;left:auto;right:12px}
+.heat{left:auto;right:12px;top:10px;display:grid;gap:5px;width:150px}
+.heat progress{width:100%;height:8px;accent-color:#eeb97d}
+.feedback{display:flex;align-items:center;gap:9px;min-height:55px;padding:8px 12px;background:#1d2927;border-top:1px solid #41524a;font-size:13px;line-height:1.28}
+.feedback-mark{width:23px;height:23px;flex:0 0 23px;display:grid;place-items:center;border-radius:50%;background:#374942;color:#f6c98d;font-size:18px;font-weight:700}
+.feedback[data-kind=warn] .feedback-mark{background:#68482d;color:#ffdfac;font-size:14px}
+.feedback[data-kind=success] .feedback-mark{background:#3a5d43;color:#e4f2cf;font-size:14px}
+.tray{padding:12px;background:var(--paper);border:1px solid #d9d8cd}
+.tray-title{display:flex;align-items:baseline;justify-content:space-between;gap:5px;white-space:nowrap;margin-bottom:7px}
+.tray-title h2{font-size:13px;font-weight:800;letter-spacing:.015em}
+.tray-title span,.salt-note{font-size:11px;color:#616d64}
+.tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.tools-grid button{touch-action:none;min-width:0;border-radius:8px;border:1px solid #d7d9cc;background:#fffefa;transition:border-color .15s ease,background .15s ease}
+.tool-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:50px;padding:5px 2px;font-size:11px;font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+.tool-button svg{width:22px;height:22px;color:#496654}
+.tools-grid button[aria-pressed=true]{background:#e8f0df;border-color:#5c825d;box-shadow:inset 0 0 0 1px #5c825d}
+.tool-button[data-active=true]:not([aria-pressed=true]){background:#e7ede8}
+.bottle-layer{position:absolute;inset:0 auto auto 0;width:760px;height:570px;z-index:1;pointer-events:none;transform-origin:0 0}
+.salt-button{position:absolute;left:0;top:0;width:60px;height:72px;display:grid;justify-items:center;align-content:start;gap:1px;padding:0;border:0;border-radius:9px;background:transparent;color:#211c15;font-size:14px;font-weight:800;line-height:1;pointer-events:auto;touch-action:none;cursor:grab;transition:transform .17s ease}
+.salt-button svg{width:40px;height:53px;overflow:visible;pointer-events:none;filter:drop-shadow(2px 3px 2px #15131088)}
+.salt-button span{padding:2px 5px 3px;background:#eee3cf;border:1px solid #e2c9a4;border-radius:4px;white-space:nowrap;pointer-events:none}
+.salt-button .bottle-cap{transition:transform .16s ease,opacity .16s ease}
+.salt-button[data-moving=true]{z-index:3;cursor:grabbing;transition:none;will-change:transform}
+.salt-button[data-engaged=true] span,.salt-button[data-source=true] span{background:#dcf1dd;border-color:#92bd90}
+.salt-button[data-engaged=true] .bottle-cap{transform:translate(12px,-1px) rotate(10deg);opacity:.77}
+.spatula-ghost{position:fixed;left:0;top:0;width:116px;height:116px;z-index:20;overflow:visible;pointer-events:none;will-change:transform;filter:drop-shadow(0 2px 2px #17252660)}
+.salt-note{line-height:1.24;padding-top:7px}
+dialog{color:var(--ink);border:1px solid var(--line);border-radius:14px;background:var(--paper);max-width:min(380px,calc(100vw - 24px));padding:19px;box-shadow:0 12px 55px #18272355}
+dialog::backdrop{background:#1627248c}
+dialog h2{font-size:19px;margin-bottom:9px}
+dialog p{font-size:14px;color:var(--muted);line-height:1.4}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+.dialog-actions button{min-height:44px;padding:0 11px;border-radius:8px;border:1px solid var(--line);background:#fffefa;font-weight:700;font-size:13px}
+.dialog-actions .primary{background:var(--forest);border-color:var(--forest);color:white}
+@media(orientation:portrait),(max-width:790px) and (min-height:680px){
+  .workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .tools-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .tool-button{min-height:48px}
+}
+@media(orientation:portrait) and (max-width:560px){
+  .shell{padding:7px;gap:7px}
+  .workspace{gap:7px}
+  .tray{padding:8px}
+  .tool-button{min-height:42px;font-size:10px}
+  .tool-button svg{width:18px;height:18px}
+  .bench-bar{padding:4px 6px}
+  .bench-label{font-size:10px;gap:4px}
+  .burner-controls{gap:3px}
+  .burner-controls button{gap:3px;min-height:39px;padding:0 4px;font-size:10px}
+  .burner-controls b{padding:3px 4px;font-size:10px}
+  .mast-actions,.brand{gap:6px}
+  .brand-icon{width:36px;height:36px}
+  .reset{padding:0 8px}
+  .reset span{display:none}
+  .method{font-size:10px;padding:5px}
+  .feedback{font-size:12px;min-height:51px;padding:6px 7px;gap:6px}
+}
+@media(orientation:landscape) and (max-height:690px){
+  .shell{padding:8px 10px;gap:8px}
+  .masthead{min-height:44px}
+  h1{font-size:29px}
+  .brand-icon{width:39px;height:39px}
+  .workspace{gap:8px}
+  .tray{padding:8px;gap:7px}
+  .tray-title{margin-bottom:5px}
+  .tool-button{min-height:44px;padding:3px 2px}
+  .tool-button svg{width:18px;height:18px}
+  .feedback{min-height:50px}
+}
+@media(orientation:landscape) and (max-height:570px){
+  .tray{gap:5px}
+  .tool-button{flex-direction:row;min-height:35px;font-size:10px}
+  .salt-note{padding-top:4px}
+  .burner-controls button{min-height:35px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2c1 5-2 6-1 10 1-.6 2.5-1.8 3.4-3.9 2.8 2.8 4.2 5.1 4.2 7.6A7.6 7.6 0 0 1 12 23a7.4 7.4 0 0 1-7.6-7.3C4.4 10.8 9.1 8 13 2Z" fill="currentColor"/><path d="M12.8 13.8c-.1 1.7-1.2 2.5-1.5 4.1-.8-.2-1.2-.6-1.5-1.2-.9.8-1.3 1.6-1.3 2.4a3.4 3.4 0 0 0 6.8 0c0-1.3-.8-3-2.5-5.3Z" fill="#262b2b"/></svg></span>
+      <div class="brand-copy">
+        <p class="eyebrow">CHEMIE <span>·</span> 9 NTG</p>
+        <h1>Flammenfärbung</h1>
+      </div>
+    </div>
+    <div class="mast-actions">
+      <span class="method">Methode A</span>
+      <button class="reset" id="reset-open" type="button" aria-label="Versuch neu starten"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 9a7.5 7.5 0 1 1 .9 8M5 9V3M5 9h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Neu starten</span></button>
+    </div>
+  </header>
+  <main class="workspace" aria-label="Virtueller Versuchsplatz">
+    <section class="bench" aria-labelledby="bench-label">
+      <div class="bench-bar">
+        <div class="bench-label" id="bench-label"><span class="bench-indicator" id="bench-indicator"></span><span>Arbeitsfläche</span></div>
+        <div class="burner-controls">
+          <button type="button" id="burner" aria-label="Gasbrenner" aria-pressed="false"><span>Brenner</span><b id="burner-state">Aus</b></button>
+          <button type="button" id="air" aria-label="Luftöffnung" aria-pressed="false"><span>Luftöffnung</span><b id="air-state">Zu</b></button>
+        </div>
+      </div>
+      <div class="view" id="view">
+        <svg id="scene" viewBox="0 0 760 570" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Versuchsaufbau: Holzregal, Arbeitsfläche, Gasbrenner, Petrischale, Spatel und Magnesiastäbchen"></svg>
+        <div class="bottle-layer" id="salts" role="group" aria-label="Salzflaschen im Holzregal und auf der Arbeitsfläche"></div>
+        <div class="selection" id="selection" hidden aria-hidden="true"></div>
+        <div class="heat" id="heat" hidden><span>Stäbchen ausglühen</span><progress id="heat-progress" max="1" value="0" aria-label="Fortschritt beim Ausglühen"></progress></div>
+      </div>
+      <div class="feedback" id="feedback" data-kind="info">
+        <span class="feedback-mark" id="feedback-mark" aria-hidden="true">›</span>
+        <p role="status" aria-live="polite" aria-atomic="true" id="notice">Ziehe eine Salzflasche vom Holzregal auf die Arbeitsfläche oder tippe sie an.</p>
+      </div>
+    </section>
+    <aside class="tray" aria-label="Geräte">
+      <section class="tools" aria-labelledby="tools-label">
+        <div class="tray-title"><h2 id="tools-label">Geräte</h2><span>Tippen oder ziehen</span></div>
+        <div class="tools-grid" id="tools"></div>
+        <p class="salt-note">Natriumsalze zuletzt prüfen.</p>
+      </section>
+    </aside>
+  </main>
+  <svg id="spatula-ghost" class="spatula-ghost" viewBox="-94 -94 116 116" aria-hidden="true" hidden></svg>
+</div>
+<dialog id="reset-dialog" aria-labelledby="reset-title">
+  <form method="dialog">
+    <h2 id="reset-title">Versuch neu starten?</h2>
+    <p>Petrischale und Spatel werden geleert. Der Brenner wird ausgeschaltet.</p>
+    <div class="dialog-actions"><button value="cancel" autofocus>Abbrechen</button><button class="primary" value="reset">Neu starten</button></div>
+  </form>
+</dialog>
+<noscript>Bitte aktiviere JavaScript im Browser, um das virtuelle Labor zu verwenden.</noscript>
+<script>
+/* Virtual adaptation of method A, 09_Qual_Flammenfaerbung.pdf. */
+(function (root, makeModel) {
+  const api = makeModel();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.FlameModel = api;
+})(typeof window === 'undefined' ? globalThis : window, function () {
+  'use strict';
+
+  const TIMING = Object.freeze({ heat: 1450, hot: 6000, emission: 3800, splash: 750 });
+  const ions = {
+    Li: { name: 'Lithium', ion: 'Li⁺', color: '#ec3667', core: '#ffc9d7' },
+    K:  { name: 'Kalium', ion: 'K⁺', color: '#9a79c6', core: '#d9cbf5' },
+    Ca: { name: 'Calcium', ion: 'Ca²⁺', color: '#e16d3e', core: '#ffce9f' },
+    Sr: { name: 'Strontium', ion: 'Sr²⁺', color: '#ff463d', core: '#ffc2ae' },
+    Ba: { name: 'Barium', ion: 'Ba²⁺', color: '#9ee256', core: '#e6ffb8' },
+    Na: { name: 'Natrium', ion: 'Na⁺', color: '#ffc128', core: '#fff1a2' },
+  };
+  const SALTS = Object.freeze([
+    ['LiCl', 'LiCl', 'Li'],
+    ['KCl', 'KCl', 'K'],
+    ['CaCl2', 'CaCl₂', 'Ca'],
+    ['SrCl2', 'SrCl₂', 'Sr'],
+    ['BaCl2', 'BaCl₂', 'Ba'],
+    ['NaCl', 'NaCl', 'Na'],
+  ].map(([id, formula, element]) => Object.freeze({
+    id, formula, element, anion: 'chlorid', name: ions[element].name + 'chlorid',
+    ion: ions[element].ion, color: ions[element].color, core: ions[element].core,
+  })));
+  const byId = new Map(SALTS.map(salt => [salt.id, salt]));
+  const saltById = id => byId.get(id);
+  const emptyDish = () => ({ salt: null, wet: false });
+
+  function createState() {
+    return {
+      dish: emptyDish(), dishNear: false, spatulaSalt: null, lit: false, airOpen: false,
+      rodClean: false, rodHot: false, rodHotUntil: 0, heating: false,
+      heatStart: null, heatProgress: 0, cobalt: false, drag: null,
+      emission: null, emissionUntil: 0, splash: false, splashUntil: 0,
+      notice: 'Ziehe eine Salzflasche vom Holzregal auf die Arbeitsfläche oder tippe sie an.',
+      noticeKind: 'info',
+    };
+  }
+
+  const tell = (s, notice, noticeKind = 'info') => ({ ...s, notice, noticeKind });
+  const warn = (s, message) => tell(s, message, 'warn');
+  const target = (value, before) => typeof value === 'boolean' ? value : !before;
+  const clock = now => Number.isFinite(now) ? now : 0;
+
+  function coloring(salt, cobalt) {
+    if (cobalt && salt.element === 'K') {
+      return { salt: salt.id, color: '#bc91ff', core: '#eadfff' };
+    }
+    // The cobalt filter strongly attenuates the sodium yellow.
+    if (cobalt && salt.element === 'Na') {
+      return { salt: salt.id, color: '#6b8adc', core: '#ccdeff' };
+    }
+    return { salt: salt.id, color: salt.color, core: salt.core };
+  }
+
+  function advance(state, now) {
+    now = clock(now);
+    let s = state;
+    if (s.heating && s.heatProgress < 1) {
+      const heatProgress = Math.max(0, Math.min(1, (now - s.heatStart) / TIMING.heat));
+      if (heatProgress === 1) {
+        s = tell({ ...s, heatProgress, rodClean: true, rodHot: true, rodHotUntil: now + TIMING.hot },
+          'Das Stäbchen ist ausgeglüht. Tauche die heiße Spitze zügig in die Salzlösung.', 'success');
+      } else if (heatProgress !== s.heatProgress) {
+        s = { ...s, heatProgress };
+      }
+    } else if (!s.heating && s.rodHot && now >= s.rodHotUntil) {
+      s = { ...s, rodHot: false, rodHotUntil: 0 };
+      if (!s.emission) s = tell(s, 'Die Spitze ist abgekühlt. Glühe sie erneut in der Flamme aus.');
+    }
+    if (s.emission && now >= s.emissionUntil) s = { ...s, emission: null, emissionUntil: 0 };
+    if (s.splash && now >= s.splashUntil) s = { ...s, splash: false, splashUntil: 0 };
+    return s;
+  }
+
+  function stopHeat(s, now) {
+    return {
+      ...s, heating: false, heatStart: null, heatProgress: 0,
+      rodHotUntil: s.heatProgress === 1 ? now + TIMING.hot : s.rodHotUntil,
+    };
+  }
+
+  function apply(state, action, now) {
+    now = clock(now);
+    let s = advance(state, now);
+    const { type } = action || {};
+    switch (type) {
+      case 'scoop': {
+        const salt = saltById(action.salt);
+        if (!salt) return warn(s, 'Führe den Spatel in eine Salzflasche.');
+        if (s.spatulaSalt) return warn(s, 'Auf dem Spatel liegt bereits Salz. Gib es zuerst in die Petrischale.');
+        return tell({ ...s, spatulaSalt: salt.id },
+          'Du hast ' + salt.formula + ' auf dem Spatel. Gib das Salz in die Petrischale.', 'success');
+      }
+      case 'deposit': {
+        if (!s.spatulaSalt) return warn(s, 'Nimm zuerst Salz aus einer Flasche auf.');
+        if (s.dish.salt) return warn(s, 'In der Petrischale ist bereits eine Probe. Leere die Schale zuerst.');
+        const wet = s.dish.wet;
+        return tell({ ...s, dish: { salt: s.spatulaSalt, wet }, spatulaSalt: null }, wet
+          ? 'Das Salz löst sich. Führe die Schale schräg an die Luftzufuhr.'
+          : 'Das Salz liegt in der Petrischale. Gib einen Tropfen Wasser dazu.', wet ? 'success' : 'info');
+      }
+      case 'water': {
+        if (s.dish.wet) return warn(s, 'Ein Tropfen Wasser genügt.');
+        return tell({ ...s, dish: { ...s.dish, wet: true } }, s.dish.salt
+          ? 'Das Salz löst sich. Führe die Schale schräg an die Luftzufuhr.'
+          : 'Der Tropfen liegt bereit. Gib Salz mit dem Spatel dazu.', s.dish.salt ? 'success' : 'info');
+      }
+      case 'dish': {
+        const dishNear = target(action.near, s.dishNear);
+        if (dishNear && (!s.dish.salt || !s.dish.wet)) {
+          return warn(s, 'Löse zuerst Salz in der Petrischale.');
+        }
+        return tell({ ...s, dishNear, splash: false, splashUntil: 0 }, dishNear
+          ? 'Die Petrischale ist schräg an der Luftzufuhr. Glühe die Stäbchenspitze aus.'
+          : 'Die Petrischale liegt wieder auf der Arbeitsfläche.');
+      }
+      case 'empty-dish':
+        return tell({ ...s, dish: emptyDish(), dishNear: false, emission: null, emissionUntil: 0, splash: false, splashUntil: 0 },
+          s.spatulaSalt ? 'Die Petrischale ist leer. Gib das Salz vom Spatel in die Schale.'
+            : 'Die Petrischale ist leer. Nimm mit dem Spatel eine neue Salzprobe auf.');
+      case 'air': {
+        const airOpen = target(action.open, s.airOpen);
+        if (airOpen === s.airOpen) return s;
+        if (!airOpen) s = { ...stopHeat(s, now), emission: null, emissionUntil: 0, splash: false, splashUntil: 0 };
+        return tell({ ...s, airOpen }, airOpen
+          ? 'Die Luftzufuhr ist ganz geöffnet.' : 'Die Luftzufuhr ist geschlossen. Öffne sie für den Versuch ganz.');
+      }
+      case 'burner': {
+        const lit = target(action.lit, s.lit);
+        if (lit === s.lit) return s;
+        if (!lit) s = { ...stopHeat(s, now), emission: null, emissionUntil: 0, splash: false, splashUntil: 0 };
+        return tell({ ...s, lit }, !lit ? 'Der Brenner ist aus.' : s.airOpen
+          ? 'Der Brenner ist an. Halte die Spitze des Magnesiastäbchens in die Flamme.'
+          : 'Der Brenner ist an. Öffne die Luftzufuhr für den Versuch ganz.');
+      }
+      case 'cobalt': {
+        const cobalt = target(action.active, s.cobalt);
+        const emission = s.emission ? coloring(saltById(s.emission.salt), cobalt) : null;
+        return tell({ ...s, cobalt, emission }, cobalt
+          ? 'Das Kobaltglas steht vor der Flamme.' : 'Das Kobaltglas ist beiseitegelegt.');
+      }
+      case 'heat-start':
+        if (!s.lit) return warn(s, 'Zünde zuerst den Gasbrenner an.');
+        if (!s.airOpen) return warn(s, 'Öffne die Luftzufuhr zum Ausglühen ganz.');
+        if (s.heating) return s;
+        return tell({ ...s, heating: true, heatStart: now, heatProgress: 0 },
+          'Halte die Spitze kurz in der Flamme, bis sie ausgeglüht ist.');
+      case 'heat-stop': {
+        if (!s.heating) return s;
+        const ready = s.heatProgress === 1;
+        s = stopHeat(s, now);
+        return ready ? s : warn(s, 'Halte die Spitze etwas länger in der Flamme.');
+      }
+      case 'dip': {
+        if (s.heating) s = stopHeat(s, now);
+        if (!s.dish.salt || !s.dish.wet) return warn(s, 'Löse zuerst Salz in der Petrischale.');
+        if (!s.lit) return warn(s, 'Der Brenner muss an sein.');
+        if (!s.airOpen) return warn(s, 'Öffne die Luftzufuhr ganz.');
+        if (!s.dishNear) return warn(s, 'Führe die Petrischale schräg an die Luftzufuhr.');
+        if (!s.rodClean || !s.rodHot || now >= s.rodHotUntil) {
+          return warn(s, 'Glühe die Stäbchenspitze aus und tauche sie noch heiß ein.');
+        }
+        const salt = saltById(s.dish.salt);
+        const message = salt.element === 'K' && !s.cobalt
+          ? 'Beobachte die Flamme. Halte bei Kaliumsalzen das Kobaltglas davor.'
+          : 'Beobachte die Flamme. Glühe das Stäbchen vor der nächsten Probe erneut aus.';
+        return tell({ ...s, rodClean: false, rodHot: false, rodHotUntil: 0,
+          emission: coloring(salt, s.cobalt), emissionUntil: now + TIMING.emission,
+          splash: true, splashUntil: now + TIMING.splash }, message, 'success');
+      }
+      case 'reset': return createState();
+      default: return s;
+    }
+  }
+
+  return Object.freeze({ SALTS, TIMING, saltById, createState, apply, advance });
+});
+
+</script>
+<script>
+(() => {
+  'use strict';
+
+  // A rod pose is its hot tip plus the angle from that tip toward the grip.
+  const rodHome = Object.freeze({x:350,y:310,angle:180});
+  const rodGripDistance = 112;
+  const radians = angle => (Number.isFinite(angle)?angle:rodHome.angle)*Math.PI/180;
+  function rodGripAtPose(pose=rodHome) {
+    const a=radians(pose.angle);
+    return {x:pose.x+rodGripDistance*Math.cos(a),y:pose.y+rodGripDistance*Math.sin(a)};
+  }
+  function rodPoseAtGrip(grip, angle=rodHome.angle) {
+    angle=Number.isFinite(angle)?angle:rodHome.angle;
+    const a=radians(angle);
+    return {x:grip.x-rodGripDistance*Math.cos(a),y:grip.y-rodGripDistance*Math.sin(a),angle};
+  }
+
+  const ZONES = Object.freeze({
+    flame: {x:548,y:157,rx:68,ry:92},
+    air: {x:545,y:367,rx:57,ry:29},
+    dishHome: {x:235,y:399,rx:85,ry:40},
+    dishNear: {x:448,y:331,rx:87,ry:47},
+    rod: {...rodGripAtPose(),rx:32,ry:24}
+  });
+  const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
+  function dishCenter(state={}) {
+    const {x,y}=state.dishNear?ZONES.dishNear:ZONES.dishHome;
+    return {x,y};
+  }
+  const dishTilt = (state={}) => state.dishNear ? 24 : 0;
+  function poolCenter(tilt) {return {x:clamp(tilt/24,-1,1)*39,y:5};}
+  function dishDipPoint(state={}) {
+    const c=dishCenter(state), angle=dishTilt(state), p=poolCenter(angle), a=angle*Math.PI/180;
+    return {x:c.x+p.x*Math.cos(a)-p.y*Math.sin(a),y:c.y+p.x*Math.sin(a)+p.y*Math.cos(a)};
+  }
+  function poolRadii(dish) {
+    return dish?.salt?{rx:32,ry:13}:{rx:19,ry:8};
+  }
+  function dishSolutionZone(state={}) {
+    return {...dishDipPoint(state),...poolRadii(state.dish)};
+  }
+  const esc = v => String(v??'').replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  const chem = value => {
+    const raw = typeof value === 'string' ? value : (value?.formula || value?.label || value?.id || '');
+    return raw.replace(/\d/g, d=>'₀₁₂₃₄₅₆₇₈₉'[Number(d)]);
+  };
+  const fillColor = (v,fallback) => typeof v === 'string' &&
+    (/^#[0-9a-f]{3,8}$/i.test(v)||/^[a-z]{3,20}$/i.test(v)||/^(?:rgb|hsl)a?\([\d.,%\s]+\)$/.test(v)) ? v : fallback;
+
+  function defs(color, core, hueGlow) {
+    return `<defs>
+      <linearGradient id="fl-wall" x1="0" y1="0" x2=".85" y2="1" gradientUnits="objectBoundingBox">
+        <stop stop-color="#263844"/><stop offset=".63" stop-color="#1c2932"/><stop offset="1" stop-color="#18252e"/>
+      </linearGradient>
+      <linearGradient id="fl-bench" x2="0" y2="1">
+        <stop stop-color="#49575c"/><stop offset=".12" stop-color="#38484f"/><stop offset="1" stop-color="#26383f"/>
+      </linearGradient>
+      <linearGradient id="fl-shelf-top" x1="0" y1="0" x2="0" y2="1">
+        <stop stop-color="#92623e"/><stop offset=".49" stop-color="#ba8754"/><stop offset="1" stop-color="#e0ad73"/>
+      </linearGradient>
+      <linearGradient id="fl-shelf-front" x1="0" y1="0" x2="0" y2="1">
+        <stop stop-color="#be8a56"/><stop offset=".22" stop-color="#a36e46"/><stop offset="1" stop-color="#725037"/>
+      </linearGradient>
+      <linearGradient id="fl-bottle-station" x1="0" y1="0" x2="0" y2="1">
+        <stop stop-color="#2c4148"/><stop offset="1" stop-color="#344a50"/>
+      </linearGradient>
+      <linearGradient id="fl-steel">
+        <stop stop-color="#42535b"/><stop offset=".13" stop-color="#7f9298"/><stop offset=".26" stop-color="#d0dde0"/>
+        <stop offset=".4" stop-color="#a5b4b8"/><stop offset=".58" stop-color="#687d85"/><stop offset=".78" stop-color="#344950"/>
+        <stop offset=".91" stop-color="#778c92"/><stop offset="1" stop-color="#26363e"/>
+      </linearGradient>
+      <linearGradient id="fl-chrome">
+        <stop stop-color="#25343c"/><stop offset=".18" stop-color="#a3b8bf"/><stop offset=".36" stop-color="#e6f0f0"/>
+        <stop offset=".55" stop-color="#809297"/><stop offset=".83" stop-color="#53666c"/><stop offset="1" stop-color="#24343b"/>
+      </linearGradient>
+      <linearGradient id="fl-foot" x2="0" y2="1">
+        <stop stop-color="#4b6067"/><stop offset=".5" stop-color="#24333b"/><stop offset="1" stop-color="#101d24"/>
+      </linearGradient>
+      <linearGradient id="fl-hose">
+        <stop stop-color="#96603b"/><stop offset=".5" stop-color="#cc8750"/><stop offset="1" stop-color="#865235"/>
+      </linearGradient>
+      <linearGradient id="fl-petri-glass" x1="0" y1="0" x2=".45" y2="1">
+        <stop stop-color="#ddf1f0" stop-opacity=".29"/><stop offset=".38" stop-color="#a3ced2" stop-opacity=".08"/>
+        <stop offset=".76" stop-color="#6b949d" stop-opacity=".07"/><stop offset="1" stop-color="#cbecef" stop-opacity=".28"/>
+      </linearGradient>
+      <linearGradient id="fl-petri-rim" x1="0" y1=".1" x2=".5" y2="1">
+        <stop stop-color="#e0f5f1" stop-opacity=".96"/><stop offset=".35" stop-color="#a5c6c9" stop-opacity=".61"/>
+        <stop offset=".7" stop-color="#7fa3ad" stop-opacity=".65"/><stop offset="1" stop-color="#e9ffff" stop-opacity=".87"/>
+      </linearGradient>
+      <linearGradient id="fl-petri-wall" x2="0" y2="1">
+        <stop stop-color="#bde1e5" stop-opacity=".06"/><stop offset=".65" stop-color="#a0cfd6" stop-opacity=".31"/>
+        <stop offset="1" stop-color="#c9e5e8" stop-opacity=".19"/>
+      </linearGradient>
+      <linearGradient id="fl-water" x2=".08" y2="1">
+        <stop stop-color="#d0f8f4" stop-opacity=".27"/><stop offset="1" stop-color="#91d7d8" stop-opacity=".65"/>
+      </linearGradient>
+      <clipPath id="fl-dish-inner"><ellipse cy="6" rx="75" ry="24"/></clipPath>
+      <linearGradient id="fl-rod" x1="0" y1="-1.25" x2="0" y2="1.25" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#f6f5ed"/><stop offset=".45" stop-color="#fffef7"/><stop offset="1" stop-color="#d8d8cf"/>
+      </linearGradient>
+      <linearGradient id="fl-bottle" x2=".45" y2="1">
+        <stop stop-color="#e6f4f4"/><stop offset=".44" stop-color="#a9cdd0"/><stop offset="1" stop-color="#639196"/>
+      </linearGradient>
+      <linearGradient id="fl-filter">
+        <stop stop-color="#4163d6" stop-opacity=".46"/><stop offset=".5" stop-color="#293caa" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#2c3b98" stop-opacity=".49"/>
+      </linearGradient>
+      <radialGradient id="fl-light">
+        <stop stop-color="#93cfff" stop-opacity=".22"/><stop offset="1" stop-color="#93cfff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="fl-plume-halo">
+        <stop stop-color="${hueGlow}" stop-opacity=".29"/><stop offset="1" stop-color="${hueGlow}" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="fl-plume" x2="0" y2="1">
+        <stop stop-color="${color}" stop-opacity="0"/><stop offset=".23" stop-color="${color}" stop-opacity=".63"/>
+        <stop offset=".66" stop-color="${color}" stop-opacity=".97"/><stop offset="1" stop-color="${core}" stop-opacity=".85"/>
+      </linearGradient>
+      <linearGradient id="fl-core" x2="0" y2="1">
+        <stop stop-color="${color}" stop-opacity="0"/><stop offset=".32" stop-color="${core}" stop-opacity=".73"/>
+        <stop offset=".8" stop-color="${core}" stop-opacity=".92"/><stop offset="1" stop-color="${core}" stop-opacity=".17"/>
+      </linearGradient>
+      <pattern id="fl-bench-grain" width="47" height="43" patternUnits="userSpaceOnUse">
+        <path d="M3 8h7m14 20h7M38 16h2m-23 23h9" stroke="#bdd1d2" stroke-opacity=".1" stroke-width=".9"/>
+        <path d="M3 21h3m31 15h7M11 14h7" stroke="#151f25" stroke-opacity=".29" stroke-width=".7"/>
+      </pattern>
+      <filter id="fl-soft" x="-.3" y="-.5" width="1.6" height="2"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="fl-softfire" x="-.5" y="-.25" width="2" height="1.5"><feGaussianBlur stdDeviation="7"/></filter>
+      <filter id="fl-glass-shadow" x="-.3" y="-.3" width="1.6" height="1.6"><feDropShadow dx="5" dy="7" stdDeviation="4" flood-color="#122137" flood-opacity=".6"/></filter>
+    </defs>
+    <style>
+      .fl-sway { transform-box:fill-box; transform-origin:50% 100%; animation:fl-sway 1.7s ease-in-out infinite alternate }
+      .fl-inner-sway { transform-box:fill-box; transform-origin:50% 100%; animation:fl-inner-sway .91s ease-in-out infinite alternate }
+      .fl-liquid-shine { animation:fl-liquid-shine 1.25s ease-out 1 }
+      .fl-drop { animation:fl-drop 900ms ease-out both }
+      .fl-mist { animation:fl-mist 600ms linear both }
+      .fl-burn-glow { animation:fl-burn-glow .8s ease-in-out infinite alternate }
+      @keyframes fl-sway {0% {transform:skewX(-2deg) scaleX(.94) scaleY(.98)} 40% {transform:skewX(1.4deg) scaleX(1.03) scaleY(1.045)} 100% {transform:skewX(3deg) scaleX(.98) scaleY(1)}}
+      @keyframes fl-inner-sway {0% {transform:skewX(2deg) scaleY(.94)} 100% {transform:skewX(-2deg) scaleY(1.045)}}
+      @keyframes fl-liquid-shine {from {opacity:.92} to {opacity:.33}}
+      @keyframes fl-drop {from {opacity:.9} 60% {opacity:.67} to {opacity:0}}
+      @keyframes fl-mist {
+        0% {opacity:0; transform:translate(0,0)}
+        18% {opacity:.78}
+        48% {opacity:.69; transform:translate(var(--fl-mist-mid-x),var(--fl-mist-mid-y))}
+        100% {opacity:0; transform:translate(var(--fl-mist-x),var(--fl-mist-y))}
+      }
+      @keyframes fl-burn-glow {from {opacity:.38} to {opacity:1}}
+      @media (prefers-reduced-motion:reduce) {.fl-sway,.fl-inner-sway,.fl-liquid-shine,.fl-drop,.fl-burn-glow{animation:none}.fl-mist{display:none}}
+    </style>`;
+  }
+
+  function backdrop(state) {
+    return `<rect width="760" height="570" fill="url(#fl-wall)"/>
+      <path d="M0 93H760M0 193H760M251 0v93m255 0v100M251 193v100" fill="none" stroke="#7e98a1" stroke-opacity=".085" stroke-width="1.3"/>
+      <ellipse cx="170" cy="135" rx="265" ry="184" fill="url(#fl-light)" opacity=".34"/>
+      <path d="M0 291h760v279H0Z" fill="url(#fl-bench)"/>
+      <path d="M0 291h760v279H0Z" fill="url(#fl-bench-grain)"/>
+      <path d="M0 294h760" stroke="#8a9da2" stroke-opacity=".32" stroke-width="2"/>
+      <path d="M0 566h760" stroke="#8fa8b0" stroke-opacity=".12" stroke-width="2"/>
+      ${state.lit?'<ellipse cx="550" cy="367" rx="196" ry="112" fill="url(#fl-plume-halo)" opacity=".31"/>':''}`;
+  }
+
+  const bottleColumns=[70,141,212,283,354,425];
+  function bottleStorage(state) {
+    const shelfActive=state.bottleMove==='to-shelf';
+    const benchActive=state.bottleMove==='to-bench';
+    return `<g aria-hidden="true" pointer-events="none">
+      <path d="M32 116h424v35H32Z" fill="#0d151b" opacity=".58" filter="url(#fl-soft)"/>
+      ${[47,447].map(x=>`<g transform="translate(${x} 131)">
+        <path d="M-8 0h16v25q0 5-5 5h-6q-5 0-5-5Z" fill="#17262c" stroke="#51666b" stroke-width="1.2"/>
+        <path d="M-10 0h23L6 19H1l4-14h-15Z" fill="#5f6c6c" stroke="#203037" stroke-width="1.2"/>
+        <circle cx="0" cy="24" r="2" fill="#929d97"/><path d="M-1.2 24h2.4" stroke="#27343a" stroke-width=".8"/>
+      </g>`).join('')}
+      <path d="M31 106h433l-10 10H23Z" fill="url(#fl-shelf-top)" stroke="#815c40" stroke-width="1"/>
+      <path d="M23 115h431v16q0 4-5 4H28q-5 0-5-4Z" fill="url(#fl-shelf-front)" stroke="#60442f" stroke-width="1.15"/>
+      <path d="M454 115l10-9v17l-10 10Z" fill="#684b35" stroke="#533c2b" stroke-width=".8"/>
+      <path d="M26 116h424M30 121c60-4 92 2 142 0s84-1 125 0 105-4 148-1M28 130c46 1 77-4 122-2s110 1 158-1 81 4 135 1" fill="none" stroke="#f7d8a4" stroke-opacity=".36" stroke-width=".9"/>
+      <path d="M32 126c34 1 73-4 103-1s61 0 84-1 64 2 95 1 78-2 126-1m-256 6q17-4 29-1t26-2m78-3q19-5 39-2t32 0" fill="none" stroke="#4f3429" stroke-opacity=".48" stroke-width=".85"/>
+      ${bottleColumns.map(x=>`<ellipse cx="${x}" cy="112" rx="22" ry="3.4" fill="#4d382a" fill-opacity=".24" stroke="#f4ce99" stroke-opacity=".38" stroke-width=".7"/>`).join('')}
+      ${shelfActive?'<rect x="33" y="59" width="426" height="73" rx="9" fill="#ffd8a0" fill-opacity=".05" stroke="#ffcf89" stroke-width="2" stroke-dasharray="5 4"/>':''}
+      <text x="33" y="49" fill="#d6e2e2" font-size="13" font-family="Arial,sans-serif" font-weight="700" letter-spacing="1.6">SALZFLASCHEN</text>
+
+      <rect x="32" y="485" width="433" height="78" rx="8" fill="url(#fl-bottle-station)" stroke="${benchActive?'#efc27e':'#7a9298'}" stroke-opacity="${benchActive?'.95':'.65'}" stroke-width="${benchActive?2:1.25}" stroke-dasharray="5 4"/>
+      <text x="34" y="477" fill="${benchActive?'#f2c78d':'#aec2c8'}" font-size="11.5" font-family="Arial,sans-serif" font-weight="700" letter-spacing="1.25">ABSTELLFLÄCHE</text>
+      ${bottleColumns.map(x=>`<ellipse cx="${x}" cy="543" rx="22" ry="5" fill="#23373e" stroke="#a6b8b7" stroke-opacity="${benchActive?'.75':'.36'}" stroke-width=".9" stroke-dasharray="2.5 2.5"/>`).join('')}
+    </g>`;
+  }
+
+  function flame(state) {
+    if (!state.lit) return '';
+    const warm = !!state.emission || !state.airOpen || (state.heating&&!state.rodClean);
+    const outer = warm ?
+      'M531 228 C510 209 506 194 512 174 C515 155 523 147 519 122 C532 133 527 99 539 72 C542 110 557 112 556 136 C570 125 568 104 572 91 C583 126 573 145 581 163 C595 187 578 214 565 228 Z' :
+      'M531 228 C522 211 520 193 525 178 C535 143 530 115 547 74 C545 115 557 132 561 152 C564 170 577 193 568 215 L565 228 Z';
+    const inner = warm ?
+      'M539 226 C528 209 535 189 543 170 C546 153 548 141 549 127 C551 148 558 157 562 176 C569 196 569 213 558 226 Z' :
+      'M537 226 C538 205 542 179 548 154 C556 179 557 198 562 225 Z';
+    return `<g pointer-events="none">
+      <ellipse cx="549" cy="158" rx="${warm?118:79}" ry="${warm?140:116}" fill="url(#fl-plume-halo)"/>
+      <g class="fl-sway"><path d="${outer}" fill="url(#fl-plume)" opacity=".55" filter="url(#fl-softfire)"/>
+      <path d="${outer}" fill="url(#fl-plume)"/></g>
+      <path class="fl-inner-sway" d="${inner}" fill="url(#fl-core)"/>
+      <path d="M533 225q16-7 33 0v4h-33z" fill="#57b6ff" opacity="${state.airOpen?.8:.35}"/>
+    </g>`;
+  }
+
+  function burner(state) {
+    return `<g>
+      <path d="M604 431 C650 444 702 447 766 418" fill="none" stroke="#121b20" stroke-width="21" opacity=".52" transform="translate(0 6)" filter="url(#fl-soft)"/>
+      <path d="M601 429 C646 448 704 446 767 416" fill="none" stroke="#462d25" stroke-width="18"/>
+      <path d="M601 429 C646 448 704 446 767 416" fill="none" stroke="url(#fl-hose)" stroke-width="14"/>
+      <path d="M604 425 C650 440 699 441 761 414" fill="none" stroke="#f0b785" stroke-opacity=".4" stroke-width="2"/>
+      <ellipse cx="554" cy="455" rx="95" ry="19" fill="#0d1820" opacity=".68" filter="url(#fl-soft)"/>
+      <path d="M572 414l45 3 3 16-45 2z" fill="url(#fl-steel)" stroke="#43535a" stroke-width="2"/>
+      <path d="M603 418l13 2v12l-14 1z" fill="#aa8050"/><path d="M604 423h14m-13 6h14" stroke="#efd091" opacity=".5"/>
+      <path d="M477 429 Q485 403 547 405 Q604 405 616 427 L616 441 Q608 460 547 462 Q489 462 477 444Z" fill="url(#fl-foot)" stroke="#172930" stroke-width="2"/>
+      <ellipse cx="546" cy="428" rx="69" ry="23" fill="#536970" stroke="#62777d" stroke-width="1.6"/>
+      <ellipse cx="546" cy="429" rx="60" ry="17" fill="#40545a"/>
+      <path d="M482 432 Q491 451 542 454 Q594 455 610 441" fill="none" stroke="#82959c" stroke-opacity=".34" stroke-width="2"/>
+      <path d="M524 381h47v45c0 9-47 9-47 0Z" fill="url(#fl-steel)" stroke="#41545c" stroke-width="1.3"/>
+      <ellipse cx="548" cy="428" rx="24" ry="6" fill="#14262e" opacity=".55"/>
+      <path d="M531 228h34l6 125c0 8-47 8-46 0Z" fill="url(#fl-steel)" stroke="#34484f" stroke-width="1.2"/>
+      <path d="M536 240l-4 104" stroke="#f1f7f3" stroke-width="1.2" opacity=".38"/>
+      <path d="M558 234l5 114" stroke="#192c35" stroke-width="2" opacity=".31"/>
+      <ellipse cx="548" cy="230" rx="17" ry="5.5" fill="#273941" stroke="#bbc8c8" stroke-width="1.6"/>
+      <ellipse cx="548" cy="229.3" rx="11.8" ry="3" fill="${state.lit?'#254762':'#101b24'}"/>
+      <path d="M523 351q23-6 50 0l1 34q-23 10-52 1z" fill="url(#fl-chrome)" stroke="#374e56" stroke-width="1.4"/>
+      <ellipse cx="548" cy="351" rx="25" ry="5" fill="#879ca2"/>
+      <path d="M524 355q25 4 48 0m-48 28q24 6 48 0" stroke="#d7e3e0" stroke-width="1.3" fill="none" opacity=".55"/>
+      ${state.airOpen
+      ?'<path d="M530 362q0-4 5-4h18q5 0 5 5v11q0 4-5 4l-18-1q-5 0-5-4Z" fill="#101e27" stroke="#34484c" stroke-width="1.8"/><path d="M533 365l19 1m-17 5l18 1" stroke="#6d8790" stroke-opacity=".42" stroke-width="1.1"/>'
+      :'<path d="M530 362q0-3 4-3h21v19l-21-1q-4 0-4-3Z" fill="#879ba0" stroke="#d9e7e7" stroke-opacity=".59" stroke-width="1.2"/><path d="M534 367h17m-17 4h17" stroke="#62787e" opacity=".69"/>'}
+      <path d="M563 357l1 20m4-19v18m3-17v16" stroke="#c7d9d9" opacity=".6" stroke-width="1"/>
+      <path d="M572 367h13l4 6-6 4h-11" fill="url(#fl-chrome)" stroke="#4b6168"/>
+      <path d="M598 367h26l10-10h53" fill="none" stroke="#9eb9c4" stroke-opacity=".63" stroke-width="1"/>
+      <text x="687" y="350" fill="#e0eaed" text-anchor="end" font-size="12" font-weight="700">LUFTZUFUHR</text>
+      <text x="687" y="372" fill="#adc1ca" text-anchor="end" font-size="13">${state.airOpen?'ganz offen':'geschlossen'}</text>
+      <ellipse cx="545" cy="367" rx="57" ry="29" fill="transparent" data-target="air"/>
+      <ellipse cx="548" cy="157" rx="68" ry="92" fill="transparent" data-target="flame"/>
+    </g>`;
+  }
+
+  function dishContents(dish, tilt, splash) {
+    if (dish?.wet) {
+      const pool=poolCenter(tilt);
+      const {rx:w,ry:h}=poolRadii(dish);
+      return `<g clip-path="url(#fl-dish-inner)">
+        <g transform="translate(${pool.x} ${pool.y}) rotate(${-tilt})">
+          <ellipse rx="${w+2}" ry="${h+1}" fill="#153f4c" opacity=".36"/>
+          <ellipse rx="${w}" ry="${h}" fill="url(#fl-water)" stroke="#bbdfde" stroke-opacity=".72" stroke-width="1.25"/>
+          <path d="M${-w+5} -2Q${-w/3} ${-h-2} ${w-8} -${h/2}" stroke="#f0ffff" stroke-opacity=".74" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M${-w+9} ${h-5}Q3 ${h+3} ${w-4} ${h-6}" fill="none" stroke="#a9e6e1" stroke-opacity=".47" stroke-width="1.1"/>
+          ${splash?`<ellipse class="fl-liquid-shine" rx="${w-6}" ry="${h-3}" fill="none" stroke="#e2ffff" stroke-width="1.65"/>`:''}
+        </g>
+      </g>`;
+    }
+    if (!dish?.salt) return '';
+    return `<g transform="translate(0 5)">
+      <ellipse rx="26" ry="10" fill="#27383f" opacity=".46"/>
+      <path d="M-25 6-19 1-14 2-10-5-5-3 1-7 7-3 13-4 18 0 24 4 16 9-4 11-15 9Z" fill="#e6e8de" stroke="#a9b7b2" stroke-width=".85"/>
+      <path d="M-18 3l8-4 5 2 6-6 6 5 6-2 6 5-8 4-6-3-4 5-9-4-8 2Z" fill="#fcfaf1"/>
+      <path d="m-23 0 3-2 3 2-2 3Zm42 8 5-2 2 3-4 2Zm-23-9 2-4 3 2-1 3Zm13 4 2-3 4 3-3 2Z" fill="#f5f3e8"/>
+      <path d="m-14 5 4-3 3 2-2 3Zm19 2 4-3 3 2-4 3Zm-1-9 3-2 1 3-2 2Z" fill="#bfc9c2"/>
+      <g fill="#f9faf2"><circle cx="-27" cy="4" r="1.7"/><circle cx="-17" cy="9" r="1.4"/><circle cx="16" cy="-3" r="1.25"/><circle cx="29" cy="3" r="1.25"/><circle cx="13" cy="12" r="1.3"/></g>
+    </g>`;
+  }
+
+  function dish(state) {
+    const d=state.drag?.kind==='dish' && Number.isFinite(state.drag.x) && Number.isFinite(state.drag.y) ? state.drag : null;
+    const center=dishCenter(state);
+    const x=d ? clamp(d.x,90,625) : center.x;
+    const y=d ? clamp(d.y,158,450) : center.y;
+    const a=d&&Number.isFinite(d.tilt) ? clamp(d.tilt,-28,28) : dishTilt(state);
+    const raised=state.dishNear||Boolean(d);
+    const name=chem(state.dish?.salt);
+    return `<g ${d?'pointer-events="none"':''}>
+      <ellipse cx="${x+6}" cy="${raised?Math.max(397,y+34):y+25}" rx="${raised?74:85}" ry="${raised?12:17}" fill="#102029" opacity="${raised ? .34 : .63}" filter="url(#fl-soft)"/>
+      <g transform="translate(${x} ${y}) rotate(${a})">
+        <ellipse cy="10" rx="82" ry="26" fill="#88adb9" fill-opacity=".13" stroke="#90b6bf" stroke-opacity=".64" stroke-width="1.45"/>
+        <ellipse cy="7" rx="76" ry="22" fill="#15313c" fill-opacity=".23" stroke="#b8d2d4" stroke-opacity=".29" stroke-width="1.3"/>
+        <ellipse cy="-3" rx="82" ry="28" fill="url(#fl-petri-glass)"/>
+        ${dishContents(state.dish,a,state.splash)}
+        <path d="M-82-3C-82 13-45 25 0 25S82 13 82-3V10C82 24 45 36 0 36S-82 24-82 10Z" fill="url(#fl-petri-wall)" stroke="url(#fl-petri-rim)" stroke-width="1.4"/>
+        <ellipse cy="-3" rx="82" ry="28" fill="none" stroke="url(#fl-petri-rim)" stroke-width="2.25"/>
+        <ellipse cy="-3" rx="78" ry="25" fill="none" stroke="#d4e8e7" stroke-opacity=".49" stroke-width=".95"/>
+        <path d="M-76-12Q-54-29-12-30M-72 12Q-43 26 8 24m16 6q31-3 48-15M-78 4v7m153-6v9" fill="none" stroke="#f0f9f6" stroke-opacity=".74" stroke-width="1.35" stroke-linecap="round"/>
+        <ellipse cy="4" rx="85" ry="38" fill="transparent" data-target="dish"/>
+      </g>
+      ${d?'':`<text x="${x}" y="${y+(state.dishNear?68:62)}" text-anchor="middle" fill="#d9e8e9" font-size="13" font-weight="700" letter-spacing=".9">PETRISCHALE${name?' · '+esc(name):''}</text>`}
+    </g>`;
+  }
+
+  function dishDestination(state) {
+    if (state.dishNear || !(state.dish?.wet && state.dish?.salt || state.selected==='dish' || state.drag?.kind==='dish')) return '';
+    const {x,y}=ZONES.dishNear;
+    return `<g transform="translate(${x} ${y}) rotate(24)">
+      <ellipse cy="2" rx="83" ry="29" fill="#b9e0e2" fill-opacity=".04" stroke="#a4c9ce" stroke-opacity=".52" stroke-width="1.5" stroke-dasharray="6 5" data-target="dish-near"/>
+      <path d="M-18 2h36m-9-8 9 8-9 8" fill="none" stroke="#a9c9cb" stroke-opacity=".68" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+    </g>`;
+  }
+
+  function rod(state) {
+    const drag=state.drag?.kind==='rod'?state.drag:null;
+    const d=state.rodPose||drag;
+    const pose=d&&Number.isFinite(d.x)&&Number.isFinite(d.y)?d:rodHome;
+    const {x,y}=pose;
+    const angle=Number.isFinite(pose.angle)?pose.angle:rodHome.angle;
+    const hot=state.heating;
+    return `<g>
+      <text x="194" y="288" fill="#d2e2e8" font-size="13" font-weight="700" letter-spacing=".7">MAGNESIASTÄBCHEN</text>
+      ${pose===rodHome?'<path d="M216 315l-7 14H196" fill="none" stroke="#adc2c8" stroke-opacity=".55" stroke-width="1"/><text x="196" y="345" fill="#d2e2e8" font-size="10" letter-spacing=".5">HINTERES ENDE</text>':''}
+      <g transform="translate(${x} ${y}) rotate(${angle})"${pose.held?' pointer-events="none"':''}>
+        <path d="M1 3H139" stroke="#101e24" stroke-opacity=".35" stroke-width="3" filter="url(#fl-soft)"/>
+        <rect x="0" y="-1.25" width="140" height="2.5" rx=".3" fill="url(#fl-rod)" stroke="#e3e2d9" stroke-width=".25"/>
+        <ellipse cx="0" cy="0" rx=".5" ry="1.25" fill="#e8e7df"/>
+        <ellipse cx="140" cy="0" rx=".5" ry="1.25" fill="#f2f1e8"/>
+        <path d="M13 .5h2m14-.8h1m21 .6h2m19-.9h1m16 .7h2m25-.4h1m17 .4h2" fill="none" stroke="#c5c5b9" stroke-opacity=".4" stroke-width=".35"/>
+        ${hot?'<path class="fl-burn-glow" d="M0 0h10" stroke="#ffa36b" stroke-width="2.5" opacity=".8"/><path d="M0 0h4" stroke="#ffe0b8" stroke-width="1.5"/>':''}
+        ${pose.held?'':'<rect x="90" y="-22" width="60" height="44" rx="19" fill="transparent" data-target="rod"/>'}
+      </g>
+    </g>`;
+  }
+
+  function aerosols(state) {
+    if (!state.lit||!state.airOpen||!state.dishNear||!state.emission||!state.splash) return '';
+    const {x,y}=dishDipPoint(state);
+    return `<g pointer-events="none" opacity=".8">
+      <path d="M${x-5} ${y-4}q-8-9-11-6m17 3q4-14 9-14m-4 18q11-8 17-4" stroke="#bfe9e7" stroke-width="1.7" fill="none" stroke-linecap="round" class="fl-drop"/>
+      <g transform="translate(${x} ${y})"
+        style="--fl-mist-x:${535-x}px;--fl-mist-y:${366-y}px;--fl-mist-mid-x:${(535-x)*.46}px;--fl-mist-mid-y:${(366-y)*.54-21}px">
+        ${[0,.055,.11,.165].map((delay,i)=>`<circle cx="${i-1.5}" cy="${1-i}" r="${i%2?1.6:2.25}" fill="#c3e8e7" class="fl-mist" style="animation-delay:${delay}s"/>`).join('')}
+      </g>
+    </g>`;
+  }
+
+  function cobaltGlass(x,y,held=false) {
+    return `<g transform="translate(${x} ${y}) rotate(-10)" ${held?'pointer-events="none"':'data-target="glass"'} filter="url(#fl-glass-shadow)">
+      <rect x="-58" y="-71" width="116" height="140" rx="7" fill="url(#fl-filter)" stroke="#849cfc" stroke-width="2.2"/>
+      <rect x="-54" y="-67" width="108" height="131" rx="5" fill="none" stroke="#6385f2" stroke-opacity=".52" stroke-width="1"/>
+      <path d="M-49 45v-97q0-8 8-8h78" fill="none" stroke="#b6cafa" stroke-opacity=".52" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M-51 62h95q8 0 8-10v-96" fill="none" stroke="#27377c" stroke-opacity=".64" stroke-width="2.2"/>
+      ${held?'':'<text x="0" y="57" text-anchor="middle" fill="#dce6ff" font-size="10" font-weight="700" letter-spacing="1">KOBALTGLAS</text>'}
+    </g>`;
+  }
+
+  function heldObject(drag) {
+    if (!drag||!Number.isFinite(drag.x)||!Number.isFinite(drag.y)) return '';
+    const {kind,x,y}=drag;
+    if (kind==='glass') return cobaltGlass(x,y,true);
+    if (kind==='water') return `<g transform="translate(${x} ${y})" pointer-events="none">
+      <path d="M0-19c-8 10-9 13-9 17a9 9 0 1018 0c0-4-1-7-9-17Z" fill="#bde8f6" stroke="#6fb3ce" opacity=".94"/>
+      <path d="M-5-3q1 5 6 7" fill="none" stroke="#fff" stroke-opacity=".71" stroke-width="1.5"/>
+      <g transform="translate(-37 -61) rotate(44)">
+        <path d="M-17-19q0-7 7-7h20q7 0 7 7v29q0 6-6 6h-22q-6 0-6-6Z" fill="url(#fl-bottle)" stroke="#d1e6e6" stroke-width="1.5"/>
+        <path d="M-16 2q11-4 32 0v9q0 5-5 5h-22q-5 0-5-5Z" fill="#83b9c7" fill-opacity=".54"/>
+        <rect x="-10" y="13" width="20" height="8" rx="2" fill="#38627c"/><path d="M-5 20v12l5 9 5-9V20" fill="#9ec4cf" stroke="#d4e9ed"/>
+        <path d="M-11-18v26" stroke="#fcffff" stroke-opacity=".57" stroke-width="2"/>
+      </g></g>`;
+    return '';
+  }
+
+  function render(state={}) {
+    const sample=state.emission;
+    const sodium=/^Na/i.test(chem(sample?.salt));
+    const filtered=state.cobalt && sodium;
+    const burn=state.heating&&!state.rodClean;
+    let color=fillColor(sample?.color, burn||!state.airOpen?'#ffad3e':'#48a5ff');
+    let core=fillColor(sample?.core, burn||!state.airOpen?'#fff0a5':'#89d7ff');
+    if (filtered) {color='#5868b8';core='#adb9fb';}
+    return `${defs(color,core,color)}
+      ${backdrop(state)}
+      ${bottleStorage(state)}
+      ${dishDestination(state)}
+      ${flame(state)}
+      ${burner(state)}
+      ${dish(state)}
+      ${aerosols(state)}
+      ${rod(state)}
+      ${state.cobalt&&state.drag?.kind!=='glass'?cobaltGlass(548,154):''}
+      ${heldObject(state.drag)}`;
+  }
+
+  window.FlameScene = Object.freeze({render,ZONES,rodHome,rodGripDistance,rodGripAtPose,rodPoseAtGrip,dishCenter,dishTilt,dishDipPoint,dishSolutionZone});
+})();
+
+</script>
+<script>
+(() => {
+  'use strict';
+
+  const M = window.FlameModel, S = window.FlameScene;
+  const $ = id => document.getElementById(id);
+  const shell = document.querySelector('.shell');
+  const scene = $('scene'), view = $('view'), bottleLayer = $('salts'), dialog = $('reset-dialog'), ghost = $('spatula-ghost');
+  const icon = paths => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+paths+'</svg>';
+  const tools = {
+    spatula: { name:'Spatel', icon:icon('<path d="m4 20 12-12m0 0 2-4 3-1-1 3-4 2Z"/><path d="m3 19 2 2"/>'), help:'Führe den leeren Spatel in eine Salzflasche auf der Arbeitsfläche oder tippe sie an.' },
+    water: { name:'Wasser', icon:icon('<path d="M12 3c-2.7 4.4-6.2 7.9-6.2 11.7a6.2 6.2 0 1 0 12.4 0c0-3.8-3.5-7.3-6.2-11.7Z"/><path d="M9 15c.1 1.7 1.1 2.7 2.5 3"/>'), help:'Gib einen Tropfen Wasser in die Petrischale.' },
+    rod: { name:'Magnesiastäbchen', icon:icon('<path d="m4 20 16-16" stroke-width="2.8" stroke="#8b948a"/><path d="m4 20 16-16" stroke-width="1.8" stroke="#f5f3e8"/>'), help:'Greife das dünne weiße Stäbchen am hinteren Ende und führe die Spitze in die Flamme. Du kannst die Flamme auch antippen.' },
+    dish: { name:'Petrischale', icon:icon('<ellipse cx="12" cy="10" rx="9" ry="4"/><path d="M3 10v4c0 2.2 4 4 9 4s9-1.8 9-4v-4m-14 2 2 .5"/>'), help:'Ziehe die Petrischale schräg an die Luftöffnung oder tippe auf die Öffnung.' },
+    glass: { name:'Kobaltglas', icon:icon('<rect x="4" y="5" width="16" height="14" rx="2" fill="#6784bf" fill-opacity=".36"/><path d="M7 15 14 8m-2 8 5-5"/>'), help:'Halte das Kobaltglas vor die Flamme. Zum Abnehmen das Glas antippen, wegziehen oder den Geräteknopf erneut antippen.' },
+    clear: { name:'Schale leeren', icon:icon('<path d="M4 9a8 8 0 1 1 1 9M4 9V4m0 5h5"/><path d="M9 14h6"/>'), help:'' },
+  };
+  const bottleSVG = '<svg viewBox="0 0 38 52" aria-hidden="true"><path d="M13 11h12v5c0 2 1.5 3.7 4.5 5.4A8 8 0 0 1 34 29v15c0 4-2 6-5 6H9c-3 0-5-2-5-6V29a8 8 0 0 1 4.5-7.6c3-1.7 4.5-3.4 4.5-5.4Z" fill="#a36533" stroke="#673d23" stroke-width="1.5"/><path d="M7 30c0-4 3.1-6.8 6-8m-6 23V34" fill="none" stroke="#f6d1a2" stroke-width="2" stroke-linecap="round" opacity=".75"/><path d="M8 42c5.6-2 10.1-.8 14-2.5 3.3-.9 6 .6 9 1.8v3.8c0 2-1.5 3-3.5 3h-16c-2 0-3.5-1-3.5-3Z" fill="#efe2c5" opacity=".8"/><rect x="5.5" y="29" width="27" height="11" rx="2.5" fill="#f6edda"/><path d="M12 33h14m-12 3h10" stroke="#a39477" stroke-width="1.2" stroke-linecap="round"/><ellipse class="bottle-mouth" cx="19" cy="11.5" rx="7" ry="2.8" fill="#3f2b22" stroke="#ba8d5f" stroke-width="1.2"/><g class="bottle-cap" transform-origin="19px 9px"><rect x="10.5" y="4" width="17" height="8.5" rx="2" fill="#343d3b" stroke="#272f2e"/><path d="M14 6v5m3.4-5v5m3.4-5v5m3.4-5v5" stroke="#81877c" stroke-width=".9"/></g></svg>';
+  $('tools').innerHTML = Object.entries(tools).map(([key,t]) => '<button type="button" class="tool-button" '+(key==='clear'?'id="dish-clear"':'data-tool="'+key+'" aria-pressed="false"')+' aria-label="'+t.name+'">'+t.icon+'<span>'+(key==='rod'?'Magnesia<wbr>stäbchen':t.name)+'</span></button>').join('');
+  $('salts').innerHTML = M.SALTS.map(s => '<button type="button" class="salt-button" data-bottle="'+s.id+'" aria-label="Salzflasche: '+s.name+' ('+s.formula+')">'+bottleSVG+'<span>'+s.formula+'</span></button>').join('');
+  const sources = [...shell.querySelectorAll('[data-tool]')];
+  const bottles = [...shell.querySelectorAll('[data-bottle]')];
+  const bottleX = [70,141,212,283,354,425];
+  const placedBottles = new Set();
+  const bottleOnBench = bottle => placedBottles.has(bottle.dataset.bottle);
+  const bottleCenter = bottle => ({x:bottleX[bottles.indexOf(bottle)],y:bottleOnBench(bottle)?522:97});
+  let bottleDrag = null;
+
+  let state = M.createState(), selected = null, gesture = null;
+  let drag = null, parkedRod = null, rodReturn = null, deposit = null, bottlePulse = null;
+  let hoverBottle = null, hoverStarted = 0;
+  let previousVisual = [], previousNotice = '', previousKind = '', ghostStyle = '';
+  let dirty = true;
+  const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
+  const smooth=t=>t*t*(3-2*t);
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const selection = kind => ({kind});
+  const saltFormula = id => M.saltById(id)?.formula || '';
+
+  function apply(action) {
+    state = M.apply(state,action,performance.now());
+    dirty = true;
+  }
+  function say(notice,noticeKind='info') {
+    state = {...state,notice,noticeKind};
+    dirty = true;
+  }
+  function point(event) {
+    const m=scene.getScreenCTM();
+    if (!m) return null;
+    const p=scene.createSVGPoint();
+    p.x=event.clientX; p.y=event.clientY;
+    const q=p.matrixTransform(m.inverse());
+    return {x:q.x,y:q.y};
+  }
+  function screenPoint(p) {
+    const m=scene.getScreenCTM();
+    if (!m) return null;
+    const pos=scene.createSVGPoint();
+    pos.x=p.x; pos.y=p.y;
+    return pos.matrixTransform(m);
+  }
+  const within=p=>p&&p.x>=0&&p.y>=0&&p.x<=760&&p.y<=570;
+  const rackDrop=p=>p&&p.x>=22&&p.x<=478&&p.y>=28&&p.y<=162;
+  const benchDrop=p=>p&&p.x>=18&&p.x<=497&&p.y>=293&&p.y<=568;
+  function inZone(p,key,factor=1) {
+    const z=S.ZONES[key];
+    return Boolean(p&&z&&((p.x-z.x)/z.rx)**2+((p.y-z.y)/z.ry)**2<=factor);
+  }
+  function onDish(p,target) {
+    return target==='dish'||inZone(p,state.dishNear?'dishNear':'dishHome',1.26);
+  }
+  function crossesSolution(a,b) {
+    if(!state.dish.wet||!b)return false;
+    const z=S.dishSolutionZone(state);
+    if(!z)return false;
+    const ax=((a||b).x-z.x)/z.rx,ay=((a||b).y-z.y)/z.ry;
+    const dx=(b.x-z.x)/z.rx-ax,dy=(b.y-z.y)/z.ry-ay;
+    const d2=dx*dx+dy*dy,t=d2?clamp(-(ax*dx+ay*dy)/d2,0,1):0;
+    return (ax+t*dx)**2+(ay+t*dy)**2<=1;
+  }
+  function rodPose(now=performance.now()) {
+    if(drag?.kind==='rod')return drag;
+    if(parkedRod)return parkedRod;
+    if(!rodReturn)return S.rodHome;
+    const {from,start}=rodReturn,home=S.rodHome;
+    const t=clamp((now-start)/230,0,1);
+    if(t>=1){rodReturn=null;return home;}
+    if(!t)return from;
+    const u=smooth(t);
+    return {x:lerp(from.x,home.x,u),y:lerp(from.y,home.y,u),angle:lerp(from.angle,home.angle,u)};
+  }
+  function returnRod(from=rodPose(),hold=0) {
+    parkedRod=null;
+    if(drag?.kind==='rod')drag=null;
+    rodReturn=from===S.rodHome?null:{from:{x:from.x,y:from.y,angle:from.angle},start:performance.now()+hold};
+    dirty=true;
+  }
+  function stopHeating() {
+    if(state.heating)apply({type:'heat-stop'});
+  }
+  function select(tool,withHint=true) {
+    if(tool?.kind!=='rod'&&parkedRod){stopHeating();returnRod();}
+    selected=tool;dirty=true;
+    if(!withHint||!tool)return;
+    if(tool.kind==='spatula'&&state.spatulaSalt)say('Gib '+saltFormula(state.spatulaSalt)+' vom Spatel in die Petrischale.');
+    else if(tool.kind==='rod'&&state.rodHot)say('Tauche die heiße Spitze zügig in die Salzlösung.');
+    else if(tool.kind==='dish'&&!(state.dish.wet&&state.dish.salt))say('Löse zuerst das Salz in der Petrischale.');
+    else say(tools[tool.kind].help);
+  }
+  function setBurner() {
+    apply({type:'burner'});
+    if(!state.lit&&parkedRod)returnRod();
+  }
+  function setAir() {
+    apply({type:'air'});
+    if(!state.airOpen&&parkedRod)returnRod();
+  }
+  function removeGlass(){
+    const hadFocus=document.activeElement?.closest('[data-target="glass"]');
+    apply({type:'cobalt',active:false});
+    if(selected?.kind==='glass')selected=null;
+    if(hadFocus)sources.find(button=>button.dataset.tool==='glass')?.focus({preventScroll:true});
+  }
+  function heatAt(p) {
+    if(state.heating&&parkedRod)return;
+    apply({type:'heat-start'});
+    if(state.heating){
+      const z=S.ZONES.flame;
+      const tip=p&&inZone(p,'flame')?p:{x:z.x,y:z.y};
+      parkedRod={...tip,angle:S.rodHome.angle};rodReturn=null;
+    }
+  }
+  function dipNow() {
+    const before=state.emission;
+    apply({type:'dip'});
+    return Boolean(state.emission&&state.emission!==before);
+  }
+
+  function scoop(bottle) {
+    if(!bottleOnBench(bottle)){
+      say('Stelle die Salzflasche erst vom Holzregal auf die Arbeitsfläche.','warn');
+      return false;
+    }
+    if(selected?.kind!=='spatula'){
+      say('Nimm zuerst den leeren Spatel und führe ihn in diese Salzflasche.','warn');
+      return false;
+    }
+    const before=state.spatulaSalt;
+    apply({type:'scoop',salt:bottle.dataset.bottle});
+    if(!before&&state.spatulaSalt){
+      bottlePulse={bottle,until:performance.now()+520};
+      return true;
+    }
+    return false;
+  }
+  function placeBottle(bottle,onBench){
+    const id=bottle.dataset.bottle;
+    if(onBench)placedBottles.add(id);else placedBottles.delete(id);
+    if(bottlePulse?.bottle===bottle)bottlePulse=null;
+    say(onBench?`${saltFormula(id)} steht auf der Arbeitsfläche. Nimm mit dem Spatel etwas Salz auf.`:`${saltFormula(id)} steht wieder im Holzregal.`);
+  }
+  function tapBottle(bottle){
+    if(!bottleOnBench(bottle))placeBottle(bottle,true);
+    else if(selected?.kind==='spatula')scoop(bottle);
+    else placeBottle(bottle,false);
+  }
+  function actionAt(tool,p,target='',fromDrag=false) {
+    if(!tool)return;
+    const {kind}=tool;
+    const atDish=onDish(p,target);
+    const atFlame=target==='flame'||(!atDish&&inZone(p,'flame'));
+    if(kind==='spatula'||kind==='water'){
+      if(!atDish){
+        if(fromDrag)say(kind==='spatula'&&!state.spatulaSalt?tools.spatula.help:'Führe das Werkzeug zur Petrischale.','warn');
+        return;
+      }
+      const before=state.dish;
+      const powder=state.spatulaSalt;
+      apply({type:kind==='water'?'water':'deposit'});
+      if(state.dish!==before){
+        deposit={kind,until:performance.now()+540,loaded:Boolean(powder)};
+        if(kind==='spatula')bottlePulse=null;
+      }
+      return;
+    }
+    if(kind==='rod'){
+      if(atFlame)heatAt(p);
+      else if(atDish){
+        const before=rodPose();
+        if(dipNow()){
+          returnRod({...S.dishDipPoint(state),angle:205},420);
+          draw(performance.now());
+        }else if(parkedRod)returnRod(before);
+      }
+      return;
+    }
+    if(kind==='dish'){
+      const near=target==='air'||target==='dish-near'||(p&&(inZone(p,'air')||(p.x>350&&p.x<630&&p.y>231&&p.y<425)));
+      const home=p&&p.x<338&&p.y>280&&p.y<499;
+      if(near||(home&&state.dishNear)){
+        apply({type:'dish',near:Boolean(near)});
+        if(state.dishNear===Boolean(near))selected=null;
+      }else say(tools.dish.help);
+      return;
+    }
+    if(kind==='glass'){
+      if(atFlame||target==='glass'){apply({type:'cobalt',active:true});selected=null;}
+      else if(fromDrag&&state.cobalt)removeGlass();
+      else say(tools.glass.help);
+    }
+  }
+  function tapScene(p,target){
+    if(target==='glass'){removeGlass();return;}
+    if(target==='rod'){select(selection('rod'));return;}
+    if(target==='spatula'){select(selection('spatula'));return;}
+    if(target==='dish'){
+      if(!selected||selected.kind==='dish')select(selection('dish'));
+      else actionAt(selected,p,target);
+      return;
+    }
+    if(target==='air'&&selected?.kind!=='dish'){setAir();return;}
+    if(target==='burner'){setBurner();return;}
+    if(selected){actionAt(selected,p,target);return;}
+    if(target==='flame')say(tools.rod.help);
+  }
+
+  function down(e){
+    if(gesture||e.button!==0||!e.isPrimary)return;
+    const button=e.target.closest('[data-tool]');
+    const bottle=e.target.closest('[data-bottle]');
+    const isScene=scene.contains(e.target);
+    if(!button&&!bottle&&!isScene)return;
+    const target=isScene?e.target.closest('[data-target]')?.dataset.target||'':'';
+    const p=(isScene||bottle)?point(e):null;
+    const from=bottle?(bottleOnBench(bottle)&&selected?.kind==='spatula'&&state.spatulaSalt===bottle.dataset.bottle?selected:selection('bottle')):
+      button?selection(button.dataset.tool):target==='glass'?selection('glass'):target==='rod'?selection('rod'):
+      target==='spatula'?selection('spatula'):target==='dish'?selection('dish'):selected?.kind==='rod'?null:selected;
+    if(button||target==='rod')select(from,!(button?.dataset.tool==='glass'&&state.cobalt));
+    const dish=target==='dish'?S.dishCenter(state):null;
+    const grip=dish&&p?{x:p.x-dish.x,y:p.y-dish.y}:target==='glass'&&p?{x:p.x-548,y:p.y-154}:null;
+    let rod=null;
+    if(from?.kind==='rod'){
+      const pose=rodPose(),handle=S.rodGripAtPose(pose);
+      rod={pose,handle,angle:pose.angle,offset:p?{x:p.x-handle.x,y:p.y-handle.y}:{x:0,y:0},dipped:false};
+      if(target==='rod'){
+        // Freeze the exact displayed pose on pickup, even during the return motion.
+        parkedRod={x:pose.x,y:pose.y,angle:pose.angle};rodReturn=null;
+      }
+    }
+    const center=bottle?bottleCenter(bottle):null;
+    const bottleGrip=center&&p?{x:p.x-center.x,y:p.y-center.y}:null;
+    gesture={id:e.pointerId,button,bottle,target,p,from,grip,rod,bottleGrip,x:e.clientX,y:e.clientY,clientX:e.clientX,clientY:e.clientY,moved:false};
+    shell.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  }
+  function dragPoint(e,g){
+    const p=point(e);
+    return p&&g.grip?{x:p.x-g.grip.x,y:p.y-g.grip.y}:p;
+  }
+  function bottlePoint(p,g){
+    return p?{x:p.x-(g.bottleGrip?.x||0),y:p.y-(g.bottleGrip?.y||0)}:null;
+  }
+  function moveRod(e,g){
+    const p=point(e),r=g.rod;
+    if(!p||!r)return;
+    const handle={x:p.x-r.offset.x,y:p.y-r.offset.y};
+    const travel=Math.hypot(handle.x-r.handle.x,handle.y-r.handle.y);
+    // The hand stays anchored to the same point; only the angle changes smoothly.
+    const aim=lerp(S.rodHome.angle,205,smooth(clamp((handle.y-205)/89,0,1)));
+    const angle=lerp(r.angle,aim,smooth(clamp(travel/74,0,1)));
+    const prev=r.pose;
+    const tip=S.rodPoseAtGrip(handle,angle);
+    r.pose={...tip,angle,held:true};
+    parkedRod=null;rodReturn=null;drag={kind:'rod',...r.pose};dirty=true;
+    if(inZone(tip,'flame')&&state.lit&&state.airOpen){
+      if(!state.heating&&!r.dipped)apply({type:'heat-start'});
+    }else stopHeating();
+    if(!r.dipped&&state.rodHot&&state.dishNear&&state.lit&&state.airOpen&&crossesSolution(prev,tip)){
+      r.dipped=dipNow();
+      // Start the color and the splash on contact, even while the finger stays down.
+      if(r.dipped)draw(performance.now());
+    }
+  }
+  function dropRod(e,g){
+    moveRod(e,g);
+    const {pose,dipped}=g.rod;
+    if(state.heating&&inZone(pose,'flame')){
+      parkedRod={x:pose.x,y:pose.y,angle:pose.angle};rodReturn=null;
+      return;
+    }
+    stopHeating();
+    if(!dipped&&onDish(pose,'')){
+      if(state.dishNear&&state.dish.wet&&state.rodHot&&state.lit&&state.airOpen)
+        say('Führe die heiße Spitze in die Flüssigkeit am tieferen Rand der Schale.','warn');
+      else dipNow(); // Report the missing preparation or heat.
+    }
+    returnRod(pose,dipped&&crossesSolution(null,pose)?420:0);
+  }
+  const bottleAt=e=>document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-bottle]')||null;
+  function setHover(bottle){
+    if(hoverBottle===bottle)return;
+    hoverBottle=bottle;hoverStarted=performance.now();dirty=true;
+  }
+  function move(e){
+    if(gesture?.id!==e.pointerId)return;
+    if(!gesture.moved&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)<6)return;
+    gesture.moved=true;gesture.clientX=e.clientX;gesture.clientY=e.clientY;
+    if(!gesture.from)return;
+    if(gesture.rod){moveRod(e,gesture);return;}
+    const p=dragPoint(e,gesture),s=gesture.from;
+    if(!p)return;
+    if(s.kind==='bottle'){
+      if(bottlePulse?.bottle===gesture.bottle)bottlePulse=null;
+      bottleDrag={bottle:gesture.bottle,...bottlePoint(p,gesture)};
+      dirty=true;
+      return;
+    }
+    if(selected?.kind!==s.kind)select(s,false);
+    if(s.kind==='spatula'){
+      const bottle=bottleAt(e);
+      setHover(bottle&&bottleOnBench(bottle)?bottle:null);
+      if(bottlePulse&&hoverBottle!==bottlePulse.bottle)bottlePulse=null;
+      dirty=true;
+      return;
+    }
+    if(s.kind==='dish'){
+      if(!(state.dish.wet&&state.dish.salt)){
+        if(!gesture.blocked)say('Löse das Salz mit einem Tropfen Wasser, bevor du die Schale an die Luftöffnung führst.','warn');
+        gesture.blocked=true;
+        return;
+      }
+      const home=S.ZONES.dishHome,near=S.ZONES.dishNear;
+      const tilt=S.dishTilt({dishNear:true})*clamp(.82*(p.x-home.x)/(near.x-home.x)+.18*(home.y-p.y)/(home.y-near.y),0,1);
+      drag=within(p)?{kind:'dish',x:p.x,y:p.y,tilt}:null;
+    }else{
+      drag=within(p)?{kind:s.kind,x:p.x,y:p.y}:null;
+    }
+    dirty=true;
+  }
+  function up(e){
+    if(gesture?.id!==e.pointerId)return;
+    const g=gesture;
+    gesture=null;
+    const p=dragPoint(e,g);
+    if(g.moved&&g.rod){
+      dropRod(e,g);
+    }else if(g.moved&&g.from?.kind==='bottle'){
+      const b=g.bottle,q=bottlePoint(p,g);
+      if(!bottleOnBench(b)&&benchDrop(q))placeBottle(b,true);
+      else if(bottleOnBench(b)&&rackDrop(q))placeBottle(b,false);
+      else if(!rackDrop(q)&&!benchDrop(q))say(bottleOnBench(b)?'Ziehe die Flasche zum Zurückstellen ins Holzregal.':'Stelle die Flasche unten auf der Arbeitsfläche ab.');
+    }else if(g.moved&&g.from){
+      const bottle=g.from.kind==='spatula'?bottleAt(e):null;
+      if(bottle){
+        if(!state.spatulaSalt||state.spatulaSalt!==bottle.dataset.bottle)scoop(bottle);
+        else bottlePulse={bottle,until:performance.now()+500};
+      }else if(within(p)||g.from.kind==='glass')actionAt(g.from,p,'',true);
+    }else if(!g.moved&&g.bottle)tapBottle(g.bottle);
+    else if(!g.moved&&g.button?.dataset.tool==='glass'&&state.cobalt)removeGlass();
+    else if(!g.moved&&!g.button)tapScene(g.p,g.target);
+    drag=null;bottleDrag=null;setHover(null);dirty=true;
+  }
+  function cancel(e){
+    if(gesture?.id!==e.pointerId)return;
+    if(gesture.rod&&gesture.moved){stopHeating();returnRod(gesture.rod.pose);}
+    gesture=null;drag=null;bottleDrag=null;setHover(null);dirty=true;
+  }
+  shell.addEventListener('pointerdown',down);
+  shell.addEventListener('pointermove',move);
+  shell.addEventListener('pointerup',up);
+  shell.addEventListener('pointercancel',cancel);
+  shell.addEventListener('lostpointercapture',cancel);
+  shell.addEventListener('click',e=>{
+    if(e.detail!==0)return;
+    const button=e.target.closest('[data-tool]');
+    const bottle=e.target.closest('[data-bottle]');
+    if(button?.dataset.tool==='glass'&&state.cobalt)removeGlass();
+    else if(button)select(selection(button.dataset.tool));
+    else if(bottle)tapBottle(bottle);
+  });
+  scene.addEventListener('keydown',e=>{
+    const target=e.target.closest('[data-target]')?.dataset.target;
+    if(!target||!['Enter',' '].includes(e.key))return;
+    e.preventDefault();
+    tapScene(null,target);
+  });
+  $('burner').addEventListener('click',setBurner);
+  $('air').addEventListener('click',setAir);
+  $('dish-clear').addEventListener('click',()=>{
+    select(null,false);drag=null;deposit=null;apply({type:'empty-dish'});
+  });
+  $('reset-open').addEventListener('click',()=>{dialog.returnValue='';dialog.showModal();});
+  dialog.addEventListener('close',()=>{
+    if(dialog.returnValue==='reset'){
+      selected=null;gesture=null;drag=null;parkedRod=null;rodReturn=null;deposit=null;bottlePulse=null;bottleDrag=null;placedBottles.clear();setHover(null);
+      apply({type:'reset'});
+    }
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&!dialog.open){select(null,false);drag=null;}
+  });
+
+  function spatulaArt(loaded){
+    return '<path d="M-90 3h70" stroke="#162726" stroke-width="7" stroke-linecap="round" opacity=".4"/><path d="M-89 0h69" stroke="#647c84" stroke-width="7" stroke-linecap="round"/><path d="M-88 -1h65" stroke="#c8d9da" stroke-width="2.6" stroke-linecap="round"/><path d="M-25 -3q6-5 12-3L1 -2Q6 1 0 5l-14 2q-8 1-11-3Z" fill="#afc4c7" stroke="#d7e5e3" stroke-width="1.1"/>'+(loaded?'<path d="M-14 1q4-5 8-3l6 3-4 3h-7Z" fill="#fff5d5"/><circle cx="-8" cy="-1" r="1.2" fill="#fffdf1"/><circle cx="-4" cy="1" r="1.1" fill="#fffdf1"/>':'');
+  }
+  function spatulaOnBench(){
+    if((gesture?.moved&&gesture.from?.kind==='spatula')||bottlePulse)return '';
+    const loaded=Boolean(state.spatulaSalt);
+    return '<g transform="translate(175 329) rotate(-12)"><text x="-87" y="-13" fill="#d3e2e8" font-size="13" font-weight="700" letter-spacing=".7">SPATEL</text>'+spatulaArt(loaded)+'<rect x="-96" y="-20" width="104" height="45" rx="10" fill="transparent" data-target="spatula"/></g>';
+  }
+  function depositSVG(){
+    if(!deposit)return '';
+    const p=S.dishDipPoint(state),x=p.x,y=p.y;
+    if(deposit.kind==='water')return '<g pointer-events="none" aria-hidden="true" transform="translate('+x+' '+y+')"><path fill="#aee4f0" stroke="#f2fcff" stroke-width="1.2" d="M0 -9C-2 -5 -6 -1 -6 2a6 6 0 0 0 12 0C6 -1 2 -5 0 -9Z"><animateTransform attributeName="transform" type="translate" from="0 -44" to="0 0" dur=".24s" fill="freeze"/><animate attributeName="opacity" values="1;1;0" keyTimes="0;.45;1" dur=".5s" fill="freeze"/></path><ellipse rx="5" ry="3" fill="none" stroke="#d9f8fb" opacity="0"><animate attributeName="rx" values="4;4;20" keyTimes="0;.44;1" dur=".52s" fill="freeze"/><animate attributeName="ry" values="2;2;9" keyTimes="0;.44;1" dur=".52s" fill="freeze"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.4;.46;1" dur=".52s" fill="freeze"/></ellipse></g>';
+    return '<g pointer-events="none" aria-hidden="true" transform="translate('+x+' '+y+')" fill="#fffef1">'+[-12,-6,-2,5,10].map((dx,i)=>'<circle cx="'+dx+'" cy="'+((i%3)*4-4)+'" r="'+(i%2?1.4:2)+'"><animateTransform attributeName="transform" type="translate" from="0 -28" to="0 0" dur=".'+(22+i*3)+'s" fill="freeze"/><animate attributeName="opacity" values="1;1;0" dur=".54s" fill="freeze"/></circle>').join('')+'</g>';
+  }
+  function drawGhost(){
+    let position=null,angle=20;
+    const engaged=(hoverBottle&&(!state.spatulaSalt||state.spatulaSalt===hoverBottle.dataset.bottle)?hoverBottle:null)||bottlePulse?.bottle;
+    if(engaged){
+      const r=engaged.querySelector('.bottle-mouth').getBoundingClientRect();
+      position={x:r.left+r.width*.5,y:r.top+r.height*.5+8};
+      angle=70;
+    }else if(gesture?.moved&&gesture.from?.kind==='spatula'){
+      position={x:gesture.clientX,y:gesture.clientY};
+    }else if(deposit?.kind==='spatula'){
+      const p=S.dishDipPoint(state);
+      position=screenPoint({x:p.x,y:p.y-24});
+      angle=17;
+    }
+    ghost.toggleAttribute('hidden',!position);
+    if(position){
+      const style=angle+':'+Boolean(state.spatulaSalt);
+      if(style!==ghostStyle){ghost.innerHTML='<g transform="rotate('+angle+')">'+spatulaArt(Boolean(state.spatulaSalt))+'</g>';ghostStyle=style;}
+      ghost.style.transform='translate('+Math.round(position.x-94)+'px,'+Math.round(position.y-94)+'px)';
+    }
+    for(const b of bottles){
+      b.dataset.engaged=String(b===engaged);
+      b.dataset.source=String(state.spatulaSalt===b.dataset.bottle);
+    }
+  }
+  function decorateTargets(){
+    const done=new Set();
+    for(const el of scene.querySelectorAll('[data-target]')){
+      const key=el.dataset.target;
+      if(done.has(key))continue;
+      done.add(key);
+      const content=state.dish.salt?(state.dish.wet?'Salzlösung ':'trockenes Salz ')+saltFormula(state.dish.salt):state.dish.wet?'Wassertropfen':'leer';
+      const label=({rod:'Hinteres Ende des Magnesiastäbchens',glass:'Kobaltglas abnehmen',spatula:state.spatulaSalt?'Spatel mit '+saltFormula(state.spatulaSalt):'Leerer Spatel',dish:'Petrischale · '+content+(state.dishNear?' · schräg an der Luftöffnung':''),'dish-near':'Platz an der Luftöffnung',air:'Luftöffnung',flame:'Flamme',burner:'Gasbrenner'})[key];
+      if(!label)continue;
+      el.setAttribute('role','button');
+      el.setAttribute('tabindex','0');
+      el.setAttribute('aria-label',label);
+    }
+  }
+  function drawHeat(now){
+    $('heat').hidden=!(state.heating||state.rodHot);
+    const message=state.rodHot?'Spitze heiß':'Stäbchen ausglühen';
+    if($('heat').firstElementChild.textContent!==message)$('heat').firstElementChild.textContent=message;
+    $('heat-progress').value=state.heating?state.heatProgress:Math.max(0,(state.rodHotUntil-now)/M.TIMING.hot);
+  }
+  function syncBottleLayer(){
+    const m=scene.getScreenCTM();
+    if(!m)return;
+    const r=view.getBoundingClientRect();
+    bottleLayer.style.transform='translate('+(m.e-r.left)+'px,'+(m.f-r.top)+'px) scale('+m.a+')';
+  }
+  function drawBottlePositions(){
+    for(const b of bottles){
+      const moving=bottleDrag?.bottle===b;
+      const bench=bottleOnBench(b),p=moving?bottleDrag:bottleCenter(b);
+      const loc=bench?'Arbeitsfläche':'Holzregal';
+      b.dataset.moving=String(moving);
+      b.dataset.location=bench?'bench':'shelf';
+      b.style.transform='translate('+(p.x-30)+'px,'+(p.y-36)+'px)';
+      const salt=M.saltById(b.dataset.bottle);
+      b.setAttribute('aria-label','Salzflasche: '+salt.name+' ('+salt.formula+') · '+loc);
+      b.title=bench?(selected?.kind==='spatula'?'Salz mit dem Spatel aufnehmen':'Zurück ins Holzregal'):'Auf die Arbeitsfläche stellen';
+    }
+  }
+  function draw(now){
+    const spatulaMoving=Boolean(gesture?.moved&&gesture.from?.kind==='spatula');
+    const pose=rodPose(now);
+    const bottleMove=bottleDrag?(bottleOnBench(bottleDrag.bottle)?'to-shelf':'to-bench'):null;
+    const visual=[state.dish,state.spatulaSalt,state.lit,state.airOpen,state.dishNear,state.rodClean,state.rodHot,state.cobalt,state.emission,state.heating,state.splash,drag,pose,deposit,selected?.kind,spatulaMoving,bottlePulse,bottleMove];
+    if(visual.some((v,i)=>v!==previousVisual[i])){
+      const focus=scene.contains(document.activeElement)?document.activeElement.dataset.target:null;
+      scene.innerHTML=S.render({...state,drag,bottleMove,rodPose:pose===S.rodHome?null:pose,selected:selected?.kind})+spatulaOnBench()+depositSVG();
+      scene.dataset.holding=String(Boolean(drag||spatulaMoving||bottleDrag));
+      decorateTargets();
+      if(focus)scene.querySelector('[data-target="'+focus+'"]')?.focus({preventScroll:true});
+      previousVisual=visual;
+    }
+    $('burner').setAttribute('aria-pressed',state.lit);
+    $('air').setAttribute('aria-pressed',state.airOpen);
+    $('burner-state').textContent=state.lit?'An':'Aus';
+    $('air-state').textContent=state.airOpen?'Ganz offen':'Zu';
+    $('bench-indicator').classList.toggle('on',state.lit);
+    $('selection').hidden=!selected;
+    if(selected)$('selection').textContent=selected.kind==='spatula'&&state.spatulaSalt?'Spatel · '+saltFormula(state.spatulaSalt):tools[selected.kind].name;
+    for(const button of sources){
+      button.setAttribute('aria-pressed',String(button.dataset.tool===selected?.kind));
+      if(button.dataset.tool==='glass'){
+        button.dataset.active=state.cobalt;
+        button.setAttribute('aria-label',state.cobalt?'Kobaltglas abnehmen':'Kobaltglas');
+        button.querySelector('span').textContent=state.cobalt?'Glas abnehmen':'Kobaltglas';
+      }
+      if(button.dataset.tool==='spatula')button.dataset.active=Boolean(state.spatulaSalt);
+    }
+    drawBottlePositions();drawGhost();
+    drawHeat(now);
+    if(state.notice!==previousNotice||state.noticeKind!==previousKind){
+      $('notice').textContent=state.notice;
+      $('feedback').dataset.kind=state.noticeKind;
+      $('feedback-mark').textContent={info:'›',warn:'!',success:'✓'}[state.noticeKind];
+      previousNotice=state.notice;previousKind=state.noticeKind;
+    }
+  }
+  function frame(now){
+    const advanced=M.advance(state,now);
+    if(advanced!==state){state=advanced;dirty=true;}
+    if(deposit&&now>=deposit.until){deposit=null;dirty=true;}
+    if(bottlePulse&&now>=bottlePulse.until){bottlePulse=null;dirty=true;}
+    if(gesture?.moved&&gesture.from?.kind==='spatula'&&hoverBottle&&!state.spatulaSalt&&now-hoverStarted>=220)scoop(hoverBottle);
+    if(dirty||rodReturn){draw(now);dirty=false;}
+    else if(state.rodHot)drawHeat(now);
+    requestAnimationFrame(frame);
+  }
+  syncBottleLayer();draw(performance.now());
+  new ResizeObserver(syncBottleLayer).observe(view);
+  requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

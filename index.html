@@ -161,6 +161,7 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
         <div class="tray-title"><h2 id="tools-label">Geräte</h2><span>Tippen oder ziehen</span></div>
         <div class="tools-grid" id="tools"></div>
         <p class="salt-note">Natriumsalze zuletzt prüfen.</p>
+        <p class="salt-note">Farben und Filterwirkung vereinfacht dargestellt.</p>
       </section>
     </aside>
   </main>
@@ -223,14 +224,8 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
   const target = (value, before) => typeof value === 'boolean' ? value : !before;
   const clock = now => Number.isFinite(now) ? now : 0;
 
-  function coloring(salt, cobalt) {
-    if (cobalt && salt.element === 'K') {
-      return { salt: salt.id, color: '#bc91ff', core: '#eadfff' };
-    }
-    // The cobalt filter strongly attenuates the sodium yellow.
-    if (cobalt && salt.element === 'Na') {
-      return { salt: salt.id, color: '#6b8adc', core: '#ccdeff' };
-    }
+  // Emission belongs to the sample; cobalt glass only changes the rendered view.
+  function coloring(salt) {
     return { salt: salt.id, color: salt.color, core: salt.core };
   }
 
@@ -317,9 +312,8 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
       }
       case 'cobalt': {
         const cobalt = target(action.active, s.cobalt);
-        const emission = s.emission ? coloring(saltById(s.emission.salt), cobalt) : null;
-        return tell({ ...s, cobalt, emission }, cobalt
-          ? 'Das Kobaltglas steht vor der Flamme.' : 'Das Kobaltglas ist beiseitegelegt.');
+        return tell({ ...s, cobalt }, cobalt
+          ? 'Das Kobaltglas schwächt das gelbe Natriumlicht ab. So kannst du die Kaliumfärbung besser erkennen, wenn sie von Natrium überdeckt wird.' : 'Das Kobaltglas ist beiseitegelegt.');
       }
       case 'heat-start':
         if (!s.lit) return warn(s, 'Zünde zuerst den Gasbrenner an.');
@@ -344,10 +338,10 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
         }
         const salt = saltById(s.dish.salt);
         const message = salt.element === 'K' && !s.cobalt
-          ? 'Beobachte die Flamme. Halte bei Kaliumsalzen das Kobaltglas davor.'
+          ? 'Beobachte die Flamme. Du kannst die Ansicht zusätzlich mit dem Kobaltglas vergleichen.'
           : 'Beobachte die Flamme. Glühe das Stäbchen vor der nächsten Probe erneut aus.';
         return tell({ ...s, rodClean: false, rodHot: false, rodHotUntil: 0,
-          emission: coloring(salt, s.cobalt), emissionUntil: now + TIMING.emission,
+          emission: coloring(salt), emissionUntil: now + TIMING.emission,
           splash: true, splashUntil: now + TIMING.splash }, message, 'success');
       }
       case 'reset': return createState();
@@ -549,7 +543,7 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     </g>`;
   }
 
-  function flame(state) {
+  function flame(state, palette='fl', intensity=1) {
     if (!state.lit) return '';
     const warm = !!state.emission || !state.airOpen || (state.heating&&!state.rodClean);
     const outer = warm ?
@@ -558,11 +552,11 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     const inner = warm ?
       'M539 226 C528 209 535 189 543 170 C546 153 548 141 549 127 C551 148 558 157 562 176 C569 196 569 213 558 226 Z' :
       'M537 226 C538 205 542 179 548 154 C556 179 557 198 562 225 Z';
-    return `<g pointer-events="none">
-      <ellipse cx="549" cy="158" rx="${warm?118:79}" ry="${warm?140:116}" fill="url(#fl-plume-halo)"/>
-      <g class="fl-sway"><path d="${outer}" fill="url(#fl-plume)" opacity=".55" filter="url(#fl-softfire)"/>
-      <path d="${outer}" fill="url(#fl-plume)"/></g>
-      <path class="fl-inner-sway" d="${inner}" fill="url(#fl-core)"/>
+    return `<g pointer-events="none" opacity="${intensity}">
+      <ellipse cx="549" cy="158" rx="${warm?118:79}" ry="${warm?140:116}" fill="url(#${palette}-plume-halo)"/>
+      <g class="fl-sway"><path d="${outer}" fill="url(#${palette}-plume)" opacity=".55" filter="url(#fl-softfire)"/>
+      <path d="${outer}" fill="url(#${palette}-plume)"/></g>
+      <path class="fl-inner-sway" d="${inner}" fill="url(#${palette}-core)"/>
       <path d="M533 225q16-7 33 0v4h-33z" fill="#57b6ff" opacity="${state.airOpen?.8:.35}"/>
     </g>`;
   }
@@ -722,19 +716,56 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     return '';
   }
 
+  function cobaltPose(state) {
+    if(state.drag?.kind==='glass'&&Number.isFinite(state.drag.x)&&Number.isFinite(state.drag.y))return {x:state.drag.x,y:state.drag.y};
+    return state.cobalt?{x:548,y:154}:null;
+  }
+  function filteredPalette(sample,color,core) {
+    // Qualitative display model, not spectral measurements or calibrated RGB values.
+    // Sodium's yellow emission is strongly absorbed; potassium remains red-violet.
+    if(/^Na/.test(sample?.salt||''))return {color:'#ffc128',core:'#fff1a2',intensity:.025,sodium:true};
+    if(/^K/.test(sample?.salt||''))return {color:'#aa4c9d',core:'#cf8bc2',intensity:.68};
+    const dim=v=>{
+      const c=/^#([0-9a-f]{6})$/i.exec(v);
+      if(!c)return '#75649d';
+      const rgb=[0,2,4].map((i,n)=>Math.round(parseInt(c[1].slice(i,i+2),16)*[.5,.2,.7][n]));
+      return '#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join('');
+    };
+    return {color:dim(color),core:dim(core),intensity:.72};
+  }
+  function opticalDefs(pose,palette) {
+    if(!pose)return '';
+    const transform=`translate(${pose.x} ${pose.y}) rotate(-10)`;
+    return `<defs>
+      <mask id="fl-outside-glass" maskUnits="userSpaceOnUse" x="0" y="0" width="760" height="570" style="mask-type:luminance">
+        <rect width="760" height="570" fill="white"/>
+        <rect x="-58" y="-71" width="116" height="140" rx="7" fill="black" transform="${transform}"/>
+      </mask>
+      <clipPath id="fl-through-glass" clipPathUnits="userSpaceOnUse"><rect x="-58" y="-71" width="116" height="140" rx="7" transform="${transform}"/></clipPath>
+      <radialGradient id="fl-view-plume-halo"><stop stop-color="${palette.color}" stop-opacity=".16"/><stop offset="1" stop-color="${palette.color}" stop-opacity="0"/></radialGradient>
+      <linearGradient id="fl-view-plume" x2="0" y2="1"><stop stop-color="${palette.color}" stop-opacity="0"/><stop offset=".23" stop-color="${palette.color}" stop-opacity=".63"/><stop offset=".66" stop-color="${palette.color}" stop-opacity=".97"/><stop offset="1" stop-color="${palette.core}" stop-opacity=".85"/></linearGradient>
+      <linearGradient id="fl-view-core" x2="0" y2="1"><stop stop-color="${palette.color}" stop-opacity="0"/><stop offset=".32" stop-color="${palette.core}" stop-opacity=".73"/><stop offset=".8" stop-color="${palette.core}" stop-opacity=".92"/><stop offset="1" stop-color="${palette.core}" stop-opacity=".17"/></linearGradient>
+      <radialGradient id="fl-base-plume-halo"><stop stop-color="#428ad0" stop-opacity=".1"/><stop offset="1" stop-color="#428ad0" stop-opacity="0"/></radialGradient>
+      <linearGradient id="fl-base-plume" x2="0" y2="1"><stop stop-color="#428ad0" stop-opacity="0"/><stop offset=".3" stop-color="#428ad0" stop-opacity=".6"/><stop offset="1" stop-color="#87b1e3" stop-opacity=".7"/></linearGradient>
+      <linearGradient id="fl-base-core" x2="0" y2="1"><stop stop-color="#7297d5" stop-opacity="0"/><stop offset=".5" stop-color="#7297d5" stop-opacity=".8"/><stop offset="1" stop-color="#a6c0ec" stop-opacity=".6"/></linearGradient>
+    </defs>`;
+  }
   function render(state={}) {
     const sample=state.emission;
-    const sodium=/^Na/i.test(chem(sample?.salt));
-    const filtered=state.cobalt && sodium;
     const burn=state.heating&&!state.rodClean;
-    let color=fillColor(sample?.color, burn||!state.airOpen?'#ffad3e':'#48a5ff');
-    let core=fillColor(sample?.core, burn||!state.airOpen?'#fff0a5':'#89d7ff');
-    if (filtered) {color='#5868b8';core='#adb9fb';}
-    return `${defs(color,core,color)}
+    const color=fillColor(sample?.color, burn||!state.airOpen?'#ffad3e':'#48a5ff');
+    const core=fillColor(sample?.core, burn||!state.airOpen?'#fff0a5':'#89d7ff');
+    const pose=cobaltPose(state),palette=filteredPalette(sample,color,core);
+    const opticalFlame=pose?`<g data-flame-view="direct" mask="url(#fl-outside-glass)">${flame(state)}</g>
+      <g data-flame-view="cobalt" data-sample="${esc(sample?.salt||'burner')}" data-emission-transmission="${palette.intensity}" clip-path="url(#fl-through-glass)">
+        ${palette.sodium?flame({...state,emission:null,heating:false},'fl-base',.55):''}
+        ${flame(state,'fl-view',palette.intensity)}
+      </g>`:`<g data-flame-view="direct">${flame(state)}</g>`;
+    return `${defs(color,core,color)}${opticalDefs(pose,palette)}
       ${backdrop(state)}
       ${bottleStorage(state)}
       ${dishDestination(state)}
-      ${flame(state)}
+      ${opticalFlame}
       ${burner(state)}
       ${dish(state)}
       ${aerosols(state)}
@@ -761,7 +792,7 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     water: { name:'Wasser', icon:icon('<path d="M12 3c-2.7 4.4-6.2 7.9-6.2 11.7a6.2 6.2 0 1 0 12.4 0c0-3.8-3.5-7.3-6.2-11.7Z"/><path d="M9 15c.1 1.7 1.1 2.7 2.5 3"/>'), help:'Gib einen Tropfen Wasser in die Petrischale.' },
     rod: { name:'Magnesiastäbchen', icon:icon('<path d="m4 20 16-16" stroke-width="2.8" stroke="#8b948a"/><path d="m4 20 16-16" stroke-width="1.8" stroke="#f5f3e8"/>'), help:'Greife das dünne weiße Stäbchen am hinteren Ende und führe die Spitze in die Flamme. Du kannst die Flamme auch antippen.' },
     dish: { name:'Petrischale', icon:icon('<ellipse cx="12" cy="10" rx="9" ry="4"/><path d="M3 10v4c0 2.2 4 4 9 4s9-1.8 9-4v-4m-14 2 2 .5"/>'), help:'Ziehe die Petrischale schräg an die Luftöffnung oder tippe auf die Öffnung.' },
-    glass: { name:'Kobaltglas', icon:icon('<rect x="4" y="5" width="16" height="14" rx="2" fill="#6784bf" fill-opacity=".36"/><path d="M7 15 14 8m-2 8 5-5"/>'), help:'Halte das Kobaltglas vor die Flamme. Zum Abnehmen das Glas antippen, wegziehen oder den Geräteknopf erneut antippen.' },
+    glass: { name:'Kobaltglas', icon:icon('<rect x="4" y="5" width="16" height="14" rx="2" fill="#6784bf" fill-opacity=".36"/><path d="M7 15 14 8m-2 8 5-5"/>'), help:'Das Kobaltglas schwächt das gelbe Natriumlicht ab. So kannst du die Kaliumfärbung besser erkennen, wenn sie von Natrium überdeckt wird.' },
     clear: { name:'Schale leeren', icon:icon('<path d="M4 9a8 8 0 1 1 1 9M4 9V4m0 5h5"/><path d="M9 14h6"/>'), help:'' },
   };
   const bottleSVG = '<svg viewBox="0 0 38 52" aria-hidden="true"><path d="M13 11h12v5c0 2 1.5 3.7 4.5 5.4A8 8 0 0 1 34 29v15c0 4-2 6-5 6H9c-3 0-5-2-5-6V29a8 8 0 0 1 4.5-7.6c3-1.7 4.5-3.4 4.5-5.4Z" fill="#a36533" stroke="#673d23" stroke-width="1.5"/><path d="M7 30c0-4 3.1-6.8 6-8m-6 23V34" fill="none" stroke="#f6d1a2" stroke-width="2" stroke-linecap="round" opacity=".75"/><path d="M8 42c5.6-2 10.1-.8 14-2.5 3.3-.9 6 .6 9 1.8v3.8c0 2-1.5 3-3.5 3h-16c-2 0-3.5-1-3.5-3Z" fill="#efe2c5" opacity=".8"/><rect x="5.5" y="29" width="27" height="11" rx="2.5" fill="#f6edda"/><path d="M12 33h14m-12 3h10" stroke="#a39477" stroke-width="1.2" stroke-linecap="round"/><ellipse class="bottle-mouth" cx="19" cy="11.5" rx="7" ry="2.8" fill="#3f2b22" stroke="#ba8d5f" stroke-width="1.2"/><g class="bottle-cap" transform-origin="19px 9px"><rect x="10.5" y="4" width="17" height="8.5" rx="2" fill="#343d3b" stroke="#272f2e"/><path d="M14 6v5m3.4-5v5m3.4-5v5m3.4-5v5" stroke="#81877c" stroke-width=".9"/></g></svg>';
@@ -1284,3 +1315,4 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
 </script>
 </body>
 </html>
+

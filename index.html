@@ -119,6 +119,49 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 
+/* Reagi owns a bounded row; the character and speech never cover apparatus. */
+.glasbert{flex:none;display:grid;grid-template-columns:100px minmax(0,1fr) 36px;align-items:center;gap:8px;min-height:76px;height:76px;margin:0 0 7px;padding:0 9px 0 0;position:relative;color:#294b3e;background:#f8faf2;border:1px solid #d4dfca;border-radius:12px}
+.glasbert-character{height:74px;min-height:0;width:100px;padding:0 2px;display:flex;align-items:center;justify-content:center;position:relative;flex-direction:column;border:0;background:transparent!important;cursor:pointer;touch-action:manipulation}
+.glasbert-character:active{transform:none}
+.glasbert-character svg{display:block;width:89px;height:72px;overflow:visible;flex:none;margin-top:-3px}
+.glasbert-character>span{position:absolute;left:1px;top:3px;font:700 8px Arial,sans-serif;letter-spacing:.3px;color:#3d634a;text-shadow:0 1px #f8faf2}
+.glasbert-speech{position:relative;min-width:0;padding:7px 11px;border:1px solid #c9d9b8;border-radius:10px;background:#fffef8;max-height:68px;overflow:auto;overscroll-behavior:contain}
+.glasbert-title{display:block;margin:0 0 3px;font:700 11px Arial,sans-serif;color:#3c603f}
+.glasbert-message{margin:0;font:12px/1.4 Arial,sans-serif;color:#3e5745;overflow-wrap:break-word}
+.glasbert-dismiss{min-height:36px;width:36px;padding:0;border:0;background:transparent;color:inherit;font:24px Arial,sans-serif;align-self:start;margin-top:3px}
+.glasbert[data-state="quiet"] .glasbert-speech{border-color:transparent;background:transparent}
+.glasbert[data-state="quiet"] .glasbert-title{color:#62775d}
+.glasbert[data-state="quiet"] .glasbert-message{color:#6e7e65}
+.glasbert[data-state="warning"]{border-color:#c86e60;background:#fff5ef}
+.glasbert[data-state="warning"] .glasbert-speech{border-color:#d39083;background:#fffaf7}
+.glasbert[data-state="warning"] .glasbert-title,.glasbert[data-state="warning"] .glasbert-message{color:#9a352e}
+.glasbert[data-state="reminder"]{border-color:#ccb17a;background:#fff9ea}
+.glasbert[data-state="reminder"] .glasbert-speech{border-color:#d9c28d;background:#fffdf5}
+.glasbert[data-state="reminder"] .glasbert-title,.glasbert[data-state="reminder"] .glasbert-message{color:#785b23}
+.glasbert-mouth-concern{display:none}
+.glasbert[data-state="warning"] .glasbert-mouth-smile,.glasbert[data-state="reminder"] .glasbert-mouth-smile{display:none}
+.glasbert[data-state="warning"] .glasbert-mouth-concern,.glasbert[data-state="reminder"] .glasbert-mouth-concern{display:block}
+.glasbert[data-state="warning"] .glasbert-brow-left,.glasbert[data-state="reminder"] .glasbert-brow-left{transform:rotate(13deg);transform-box:fill-box;transform-origin:center}
+.glasbert[data-state="warning"] .glasbert-brow-right,.glasbert[data-state="reminder"] .glasbert-brow-right{transform:rotate(-13deg);transform-box:fill-box;transform-origin:center}
+.glasbert[data-state="greeting"] .glasbert-arm-left{transform-origin:49px 57px;animation:glasbert-wave .7s ease-in-out 2}
+@keyframes glasbert-wave{0%,100%{transform:rotate(0deg)}50%{transform:rotate(14deg)}}
+@media(max-width:899px){.glasbert{grid-template-columns:86px minmax(0,1fr) 36px;gap:4px;padding-right:4px;min-height:82px;height:82px}.glasbert-character{width:86px;height:80px}.glasbert-character svg{width:87px;height:75px}.glasbert-speech{max-height:74px;padding:7px 9px}.glasbert-message{font-size:12px}.glasbert-dismiss{width:36px}}
+@media(max-width:599px){.glasbert{height:auto;min-height:86px;grid-template-columns:78px minmax(0,1fr) 30px}.glasbert-character{width:78px;height:82px}.glasbert-character svg{width:80px;height:72px}.glasbert-title{font-size:10px}.glasbert-message{font-size:11px;line-height:1.35}.glasbert-speech{max-height:100px;margin:5px 0}.glasbert-dismiss{width:30px;min-height:36px}}
+@media(prefers-reduced-motion:reduce){.glasbert .glasbert-arm-left{animation:none!important}}
+
+/* Glasbert replaces the old feedback row and stays above the apparatus. */
+.bench{grid-template-rows:auto auto minmax(0,1fr)}
+#glasbert{margin:0;border-radius:0;border-width:0 0 1px;height:82px;min-height:82px;grid-template-columns:104px minmax(0,1fr) 44px;color:#294b3e}
+#glasbert .glasbert-character{width:104px;height:80px}
+#glasbert .glasbert-character svg{width:100px;height:80px}
+#glasbert .glasbert-character>span{font-size:10px;top:4px;left:7px}
+#glasbert .glasbert-dismiss{width:44px;min-height:44px}
+#glasbert .glasbert-speech{max-height:76px}
+#glasbert .glasbert-message{font-size:13px;line-height:1.35}
+#glasbert .glasbert-title{font-size:12px}
+@media(max-width:560px){#glasbert{height:94px;min-height:94px;grid-template-columns:78px minmax(0,1fr) 44px;gap:2px}#glasbert .glasbert-character{width:78px;height:86px}#glasbert .glasbert-character svg{width:82px;height:76px}#glasbert .glasbert-character>span{font-size:9px;left:2px}#glasbert .glasbert-speech{max-height:88px;padding:5px 7px;margin:2px 0}#glasbert .glasbert-message{font-size:12px}#glasbert .glasbert-title{font-size:11px}}
+@media(orientation:landscape) and (max-height:570px){#glasbert{height:70px;min-height:70px}#glasbert .glasbert-character{height:68px}#glasbert .glasbert-character svg{height:65px;width:85px}#glasbert .glasbert-speech{max-height:64px}}
+
 </style>
 </head>
 <body>
@@ -145,16 +188,14 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
           <button type="button" id="air" aria-label="Luftöffnung" aria-pressed="false"><span>Luftöffnung</span><b id="air-state">Zu</b></button>
         </div>
       </div>
+      <section id="glasbert" aria-label="Glasbert – Laborbegleitung"></section>
       <div class="view" id="view">
         <svg id="scene" viewBox="0 0 760 570" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Versuchsaufbau: Holzregal, Arbeitsfläche, Gasbrenner, Petrischale, Spatel und Magnesiastäbchen"></svg>
         <div class="bottle-layer" id="salts" role="group" aria-label="Salzflaschen im Holzregal und auf der Arbeitsfläche"></div>
         <div class="selection" id="selection" hidden aria-hidden="true"></div>
         <div class="heat" id="heat" hidden><span>Stäbchen ausglühen</span><progress id="heat-progress" max="1" value="0" aria-label="Fortschritt beim Ausglühen"></progress></div>
       </div>
-      <div class="feedback" id="feedback" data-kind="info">
-        <span class="feedback-mark" id="feedback-mark" aria-hidden="true">›</span>
-        <p role="status" aria-live="polite" aria-atomic="true" id="notice">Ziehe eine Salzflasche vom Holzregal auf die Arbeitsfläche oder tippe sie an.</p>
-      </div>
+
     </section>
     <aside class="tray" aria-label="Geräte">
       <section class="tools" aria-labelledby="tools-label">
@@ -176,6 +217,104 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
 </dialog>
 <noscript>Bitte aktiviere JavaScript im Browser, um das virtuelle Labor zu verwenden.</noscript>
 <script>
+/* Glasbert accompanies the practical steps; the controller supplies observations.
+ * No timers or automatic experiment actions are introduced here. */
+(function (scope) {
+  'use strict';
+  let host = null, onHelp = null, currentKey = '', currentKind = '';
+  const greeting = 'Hallo, ich bin Glasbert! Du experimentierst, ich passe mit auf. Tippe mich an, wenn du nicht weiterweißt.';
+  const defaultHelp = 'Kurzer Check: Greife das Stäbchen am hinteren Ende. Glühe die Spitze vor jeder neuen Probe aus und schalte den Brenner zum Schluss aus.';
+  const figure = `<svg viewBox="0 0 144 124" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="glasbert-glass" x1="0" x2="1"><stop stop-color="#e4f4ef"/><stop offset=".35" stop-color="#ffffff"/><stop offset="1" stop-color="#bedbd4"/></linearGradient>
+      <clipPath id="glasbert-inner"><path d="M53 17h38v57c0 14-8 22-19 22S53 88 53 74Z"/></clipPath>
+    </defs>
+    <ellipse cx="73" cy="116" rx="39" ry="4" fill="#31533e" opacity=".1"/>
+    <g class="glasbert-leg" fill="none" stroke="#294b3e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m61 91-3 15-10 6h17M83 91l4 16 10 6H80"/>
+    </g>
+    <g class="glasbert-arm glasbert-arm-left" fill="none" stroke="#294b3e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M50 57 33 62 24 47"/><path d="m24 47-6-6m6 6-2-10m2 10 5-8"/>
+    </g>
+    <g class="glasbert-arm glasbert-arm-right" fill="none" stroke="#294b3e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m94 58 17 7 7-12"/><path d="m118 53 5-7m-5 7 0-10m0 10-5-7"/>
+    </g>
+    <path d="M49 14h46v59c0 17-10 27-23 27S49 90 49 73Z" fill="url(#glasbert-glass)" stroke="#294b3e" stroke-width="2.8"/>
+    <g clip-path="url(#glasbert-inner)">
+      <path d="M51 72q10-6 21 0t21 0v28H51Z" fill="#9aba75"/>
+      <path d="M51 72q10-6 21 0t21 0" fill="none" stroke="#6f9455" stroke-width="1.5"/>
+      <circle cx="61" cy="82" r="3" fill="#e1edc7"/><circle cx="80" cy="87" r="2" fill="#e1edc7"/>
+    </g>
+    <path d="M56 23v46m1 13 3 7" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+    <path d="M46 10q26-5 52 0v9q-26 5-52 0Z" fill="#dceee7" stroke="#294b3e" stroke-width="2.6"/>
+    <path d="M48 11q24 4 48 0" fill="none" stroke="#fff" stroke-width="2"/>
+    <g class="glasbert-eyes" fill="#fff" stroke="#294b3e" stroke-width="1.7">
+      <ellipse cx="63" cy="45" rx="6.5" ry="8.5"/><ellipse cx="82" cy="45" rx="6.5" ry="8.5"/>
+      <ellipse cx="64" cy="46" rx="2.4" ry="4" fill="#294b3e" stroke="none"/><ellipse cx="81" cy="46" rx="2.4" ry="4" fill="#294b3e" stroke="none"/>
+    </g>
+    <g class="glasbert-brows" fill="none" stroke="#294b3e" stroke-width="2.2" stroke-linecap="round">
+      <path class="glasbert-brow-left" d="m57 33 11-1"/><path class="glasbert-brow-right" d="m77 32 10 1"/>
+    </g>
+    <path class="glasbert-mouth-smile" d="M63 60q9 11 19 0" fill="#fff" stroke="#294b3e" stroke-width="2.2" stroke-linecap="round"/>
+    <path class="glasbert-mouth-concern" d="M65 63q8-4 15 0" fill="none" stroke="#294b3e" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M55 56h4m27 0h4" stroke="#cc9b82" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  </svg>`;
+
+  function init(options = {}) {
+    host = typeof document !== 'undefined' ? document.getElementById('glasbert') : null;
+    onHelp = typeof options.onHelp === 'function' ? options.onHelp : null;
+    if (!host) return false;
+    host.classList.add('glasbert');
+    host.innerHTML = `<button class="glasbert-character" type="button" aria-label="Glasbert: Laborroutine prüfen" title="Glasbert: Laborroutine prüfen">${figure}<span>Glasbert</span></button><div class="glasbert-speech" role="status" aria-live="polite" aria-atomic="true"><strong class="glasbert-title">Dein Laborbegleiter</strong><p class="glasbert-message"></p></div><button class="glasbert-dismiss" type="button" aria-label="Glasberts Hinweis schließen" title="Hinweis schließen">×</button>`;
+    host.querySelector('.glasbert-character').addEventListener('click', () => {
+      if (onHelp) onHelp();
+      else help(defaultHelp);
+    });
+    host.querySelector('.glasbert-dismiss').addEventListener('click', quiet);
+    quiet();
+    return true;
+  }
+  function show(kind, title, message, key) {
+    if (!host && !init()) return false;
+    const nextKey = String(key || message);
+    if (currentKey === nextKey && currentKind === kind && host.dataset.state !== 'quiet') return false;
+    currentKey = nextKey; currentKind = kind;
+    const speech = host.querySelector('.glasbert-speech');
+    speech.setAttribute('role', kind === 'warning' ? 'alert' : 'status');
+    speech.setAttribute('aria-live', kind === 'warning' ? 'assertive' : 'polite');
+    host.dataset.state = kind;
+    host.querySelector('.glasbert-title').textContent = title;
+    host.querySelector('.glasbert-message').textContent = String(message || '');
+    host.querySelector('.glasbert-dismiss').hidden = false;
+    return true;
+  }
+  function warningTitle(message) {
+    if (/brenner|luftzufuhr|luftöffnung/i.test(message)) return 'Ein Blick auf den Brenner, bitte.';
+    if (/ausglüh|glühe|heiße|heiß|hitze|spitze|abgekühlt/i.test(message)) return 'Heißer Tipp vom Glas.';
+    if (/bereits.*(?:probe|salz)|vorige|nächste probe|neue probe|leere.*schale|vermisch|spatel liegt/i.test(message)) return 'Eine Probe nach der anderen.';
+    return 'Moment – kurzer Einspruch vom Glas.';
+  }
+  function greet() { return show('greeting', 'Hallo aus dem Glas!', greeting, 'greeting'); }
+  function warn(message, key) { return show('warning', warningTitle(String(message || '')), message, key); }
+  function remind(message, key) { return show('reminder', 'Ich hätte da einen kleinen Einwand.', message, key); }
+  function help(message = defaultHelp) { return show('help', 'Ein kurzer Blick auf deinen Aufbau.', message, 'help-' + message); }
+  function info(message) { return show('info', 'Glasbert schaut mit.', message); }
+  function success(message) { return show('success', 'Das sitzt!', message); }
+  function quiet() {
+    if (!host) return;
+    currentKey = ''; currentKind = 'quiet'; host.dataset.state = 'quiet';
+    const speech = host.querySelector('.glasbert-speech');
+    speech.setAttribute('role', 'status'); speech.setAttribute('aria-live', 'polite');
+    host.querySelector('.glasbert-title').textContent = 'Glasbert ist dabei.';
+    host.querySelector('.glasbert-message').textContent = 'Tippe mich an, wenn du nicht weiterweißt.';
+    host.querySelector('.glasbert-dismiss').hidden = true;
+  }
+  const api = Object.freeze({ init, greet, warn, remind, help, quiet, info, success });
+  scope.Glasbert = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof globalThis !== 'undefined' ? globalThis : window);
+
+
 /* Virtual adaptation of method A, 09_Qual_Flammenfaerbung.pdf. */
 (function (root, makeModel) {
   const api = makeModel();
@@ -819,9 +958,11 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
 
   function apply(action) {
     state = M.apply(state,action,performance.now());
+    previousNotice = '';
     dirty = true;
   }
   function say(notice,noticeKind='info') {
+    previousNotice = '';
     state = {...state,notice,noticeKind};
     dirty = true;
   }
@@ -1175,6 +1316,7 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     if(dialog.returnValue==='reset'){
       selected=null;gesture=null;drag=null;parkedRod=null;rodReturn=null;deposit=null;bottlePulse=null;bottleDrag=null;placedBottles.clear();setHover(null);
       apply({type:'reset'});
+      draw(performance.now());Glasbert.greet();
     }
   });
   document.addEventListener('keydown',e=>{
@@ -1291,9 +1433,10 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     drawBottlePositions();drawGhost();
     drawHeat(now);
     if(state.notice!==previousNotice||state.noticeKind!==previousKind){
-      $('notice').textContent=state.notice;
-      $('feedback').dataset.kind=state.noticeKind;
-      $('feedback-mark').textContent={info:'›',warn:'!',success:'✓'}[state.noticeKind];
+      if(state.noticeKind==='warn')Glasbert.warn(state.notice);
+      else if(state.noticeKind==='success')Glasbert.success(state.rodHot?state.notice+' Greife nur das hintere Ende.':state.notice);
+      else if(state.notice.startsWith('Der Brenner ist an.'))Glasbert.remind('Flamme an, Augen auf! Lass den brennenden Brenner nicht unbeaufsichtigt. '+(state.airOpen?'':'Prüfe jetzt die Luftöffnung.'));
+      else Glasbert.info(state.notice);
       previousNotice=state.notice;previousKind=state.noticeKind;
     }
   }
@@ -1307,7 +1450,27 @@ dialog p{font-size:14px;color:var(--muted);line-height:1.4}
     else if(state.rodHot)drawHeat(now);
     requestAnimationFrame(frame);
   }
-  syncBottleLayer();draw(performance.now());
+
+  function glasbertHelp(){
+    let hint;
+    if(selected?.kind==='glass'||state.cobalt)hint=tools.glass.help;
+    else if(state.rodHot)hint='Vorsicht, heiße Spitze! Greife nur das hintere Ende. Ist deine Salzlösung schon am richtigen Platz?';
+    else if(state.heating)hint='Ein kurzer Geduldstest: Beobachte die Anzeige beim Ausglühen. Wann ist die Spitze bereit?';
+    else if(state.spatulaSalt)hint='Eine Probe nach der anderen: Auf dem Spatel liegt schon Salz. Ist die Petrischale für diese Probe frei?';
+    else if(state.lit&&!state.airOpen)hint='Der Brenner läuft. Prüfe die Luftöffnung: Welche Flamme brauchst du zum Ausglühen?';
+    else if(!state.dish.salt)hint='Schau auf das Regal und deine Geräte. Womit kannst du eine kleine Salzprobe in die Petrischale bringen?';
+    else if(!state.dish.wet)hint='Das Salz liegt noch trocken in der Schale. Was fehlt für eine Salzlösung?';
+    else if(!state.dishNear)hint='Die Lösung ist vorbereitet. Vergleiche die Lage der Schale mit der Luftöffnung am Brenner.';
+    else if(!state.lit)hint='Die Probe steht bereit. Prüfe den Brenner. Denke beim Experimentieren daran: Abstand zur Flamme halten.';
+    else if(!state.rodClean)hint='Vor jeder Probe gehört das Stäbchen in die Flamme. Was könnte sonst deine Beobachtung verfälschen?';
+    else hint='Beobachte in Ruhe. Für die nächste Probe brauchst du eine leere Schale und eine erneut ausgeglühte Spitze. Zum Schluss: Brenner aus.';
+    Glasbert.help(hint);
+  }
+  Glasbert.init({onHelp:glasbertHelp});
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden&&state.lit)Glasbert.remind('Der Brenner ist noch an. Lass ihn nicht unbeaufsichtigt und schalte ihn aus, wenn du fertig bist.');
+  });
+  syncBottleLayer();draw(performance.now());Glasbert.greet();
   new ResizeObserver(syncBottleLayer).observe(view);
   requestAnimationFrame(frame);
 })();
